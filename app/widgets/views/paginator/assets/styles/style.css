@@ -1,0 +1,35 @@
+.pagination .page-item {
+    display: inline-flex;
+    margin: 5px;
+    padding: 5px 5px;
+    cursor: pointer;
+}
+
+.pagination .page-item.first:hover,
+.pagination .page-item.last:hover,
+.pagination .page-item.num:hover:not(.active) {
+    background: #1976d2;
+    color: #fff;
+}
+
+.pagination .page-item.active {
+    background: #202329;
+    color: #fff;
+    font-weight: bold;
+    cursor: default;
+}
+
+.pagination .page-item.dots {
+    cursor: default;
+}
+
+.pagination .pagination span {
+    margin: 5px;
+    cursor: default;
+}
+
+.pagination .active {}
+
+.pagination .btn {
+    cursor: pointer;
+}

@@ -1,2 +1,26 @@
-# evo-cabinet
-Private User Cabinet Frontend for ModX Evolution 1.4.x
+Private User Cabinet Core for ModX Evolution 1.4.x
+=====================
+Базовый фронт личного кабинета пользователей для сайтов под управлением Modx Evo.
+
+### Установка:
+1) Клонирование проекта:
+```sh
+composer create-project mmaurice/evo-cabinet ./cabinet
+```
+
+2) Перейти в каталог проекта:
+```sh
+cd ./cabinet
+```
+
+3) Обновить зависимости composer (на всякий случай):
+```sh
+composer update
+```
+
+4) Установить миграции для установки базового окружения и ENV-файла:
+```sh
+composer update
+```
+
+5) После установки миграций, появляется файл .env с рекомендованной конфигурацией. Если вы хотите самостоятельно сконфигурировать приложение, можно воспользоваться файлом .env.example.

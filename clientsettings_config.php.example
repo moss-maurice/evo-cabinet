@@ -1,0 +1,14 @@
+<?php
+
+return [
+    'caption' => '<h3>Разное</h3>',
+    'introtext' => 'Дополнительные настройки',
+    'settings' => [
+        'authField' => [
+            'caption' => 'Приоритетное поле авторизации/регистрации в ЛК',
+            'type' => 'option',
+            'elements' => 'E-mail==email||Телефон==phone',
+            'default_text' => 'email',
+        ],
+    ],
+];

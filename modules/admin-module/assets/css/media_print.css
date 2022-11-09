@@ -1,0 +1,27 @@
+@media print {
+    /* Стили родительского окна */
+    body>#frameset>#mainMenu,
+    body>#frameset>#tree,
+    body>#frameset>#main>.tab-row-container {
+        display: none;
+    }
+    body>#frameset>#main,
+    body>#frameset>#main>#evo-tab-page-home,
+    body>#frameset>#main>.evo-tab-page {
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+    /* Стили iframe */
+    body>h1,
+    body>form.modx-evo-lk-admin .tab-row-container,
+    body>form.modx-evo-lk-admin #actions {
+        display: none;
+    }
+    body>form.modx-evo-lk-admin #print-container {
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+    }
+}

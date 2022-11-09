@@ -1,0 +1,181 @@
+table.thread-list .thread-line td ul.files {
+    background-color: #dfe6e9;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+table.thread-list .thread-line.remove td ul.files {
+    background-color: #fab1a0;
+}
+
+table.thread-list .thread-line td ul.files li {
+    font-size: 12px;
+    font-weight: bold;
+    display: inline-block;
+    padding: 5px 20px 5px 0;
+}
+
+table.thread-list .thread-line td ul.files li.available {
+    color: #2980b9;
+}
+
+table.thread-list .thread-line td ul.files li.unavailable {
+    color: #e74c3c;
+}
+
+table.thread-list .thread-line td span.controls {
+    text-align: center;
+    display: block;
+}
+
+table.thread-list .thread-line td span.controls a.reply,
+table.thread-list .thread-line td span.controls a.edit,
+table.thread-list .thread-line td span.controls a.delete,
+table.thread-list .thread-line td span.controls span.date {
+    display: inline-block;
+    font-size: 10px;
+    padding: 3px;
+    font-weight: bold;
+}
+
+table.thread-list .thread-line td span.controls a.reply,
+table.thread-list .thread-line td span.controls a.edit,
+table.thread-list .thread-line td span.controls a.delete {
+    text-transform: uppercase;
+    color: #1976d2;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+table.thread-list .thread-line td span.controls a.reply:hover,
+table.thread-list .thread-line td span.controls a.edit:hover,
+table.thread-list .thread-line td span.controls a.delete:hover {
+    text-decoration: underline;
+}
+
+table.thread-list .thread-line td {
+    font-size: 14px;
+}
+
+table.thread-list .thread-line.outcoming td span.controls,
+table.thread-list .thread-line.incoming td span.controls {
+    text-align: right;
+}
+
+table.thread-list .thread-line.outcoming td>span:before,
+table.thread-list .thread-line.incoming td>span:before {
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border: 10px solid transparent;
+}
+
+table.thread-list .thread-line.outcoming td>span:before {
+    left: 17px;
+    border-right: 10px solid #f1f2f6;
+}
+
+table.thread-list .thread-line.incoming td>span:before {
+    right: 17px;
+    border-left: 10px solid #a4b0be;
+}
+
+table.thread-list .thread-line.outcoming td>span,
+table.thread-list .thread-line.incoming td>span {
+    text-align: left;
+    display: block;
+    width: 70%;
+    max-width: 450px;
+    background-color: #f1f2f6;
+    color: #333333;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+table.thread-list .thread-line.incoming td>span {
+    background-color: #a4b0be;
+}
+
+table.thread-list .thread-line.status td,
+table.thread-list .thread-line.status td span.controls span.date {
+    text-align: center;
+}
+
+table.thread-list .thread-line.status td {
+    font-size: 12px;
+}
+
+table.thread-list .thread-line.outcoming td span.controls span.date,
+table.thread-list .thread-line.incoming td span.controls span.date {
+    text-align: right;
+}
+
+table.thread-list .thread-line.outcoming td>span {
+    margin: 0 auto 0 0;
+}
+
+table.thread-list .thread-line.incoming td>span {
+    margin: 0 0 0 auto;
+}
+
+table.thread-list .thread-line.remove td>span {
+    color: #ffffff;
+}
+
+table.thread-list .thread-line.outcoming.remove td>span {
+    background-color: #ff4757;
+}
+
+table.thread-list .thread-line.incoming.remove td>span {
+    background-color: #ff6b81;
+}
+
+table.thread-list .thread-line.outcoming.remove td>span:before {
+    border-right: 10px solid #ff4757;
+}
+
+table.thread-list .thread-line.incoming.remove td>span:before {
+    border-left: 10px solid #ff6b81;
+}
+
+.dropzone {
+    border-radius: 5px;
+    border: 2px dashed #000000;
+    border-image: none;
+    background-color: #202329;
+    min-height: 50px;
+    margin: 0 0 10px 0;
+    color: #777777;
+    cursor: pointer;
+}
+
+.dropzone .dz-message {
+    margin: 10px 20px;
+}
+
+.dropzone .dz-preview {
+    background-color: transparent !important;
+}
+
+.dropzone .dz-remove {
+    font-weight: bold;
+    color: #d0726b;
+}
+
+.message-quote {
+    border: 1px solid #414449;
+    margin: 10px 0;
+    border-left-width: 10px;
+    padding: 10px 50px 10px 20px;
+    font-style: italic;
+}
+
+.message-quote .lk-module-message-quote-cancel-button
+{
+    float: right;
+    position: relative;
+    left: 30px;
+    cursor: pointer;
+}

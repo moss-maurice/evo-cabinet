@@ -1,0 +1,101 @@
+#dates-peakers .dp-row {
+    padding: 0 0 8px 0;
+}
+
+#dates-peakers .dp-column {
+    display: inline-block;
+}
+
+#dates-peakers .dp-column.dp-text-column {
+    line-height: 30px;
+    vertical-align: top;
+    padding: 0 10px;
+}
+
+#dates-peakers .dp-column.dp-num-column {
+    line-height: 30px;
+    vertical-align: top;
+    padding: 0 10px;
+    width: 75px;
+}
+
+#dates-peakers .button {
+    opacity: 0.75;
+    cursor: pointer
+}
+
+#dates-peakers .button:hover {
+    opacity: 1;
+}
+
+.dp-description {
+    display: none;
+}
+
+.dp-description.show-block {
+    display: table-row;
+}
+
+.dp-description .span1 {
+    padding: 0 0 0 45px;
+    width: 245px;
+    display: inline-block;
+}
+
+.dp-description .span2 {
+    padding: 0 0 0 35px;
+    width: 235px;
+    display: inline-block;
+}
+
+.dp-description .span3 {
+    padding: 0 20px;
+    width: 65px;
+    display: inline-block;
+}
+
+.icon-trigger {
+    min-width: 40px;
+}
+
+.icon-trigger .fa {
+    display: none;
+}
+
+.icon-trigger.check .fa-check {
+    display: inline-block;
+}
+
+.icon-trigger.link .fa-link {
+    display: inline-block;
+    opacity: 0.85;
+}
+
+.d-none {
+    display: none;
+}
+
+.custom-date-picker {
+    position: relative;
+}
+
+.custom-date-picker input.custom-date-picker {
+    padding: 6px 25px 6px 6px;
+}
+
+.custom-date-picker input.error,
+#voyages-form-container select.error {
+    border-color: #d9534f !important;
+}
+
+.custom-date-picker a.button-clear {
+    display: block;
+    position: absolute;
+    top: 4px;
+    right: 7px;
+    z-index: 10;
+}
+
+.button-delete {
+    cursor: pointer;
+}

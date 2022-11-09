@@ -1,0 +1,91 @@
+/* Main styles */
+
+.width200px {
+    width: 200px !important;
+}
+
+.width100px {
+    width: 100px !important;
+}
+
+.full-width {
+    width: 100% !important;
+}
+
+.left {
+    text-align: left !important;
+}
+
+.right {
+    text-align: right !important;
+}
+
+#ordersList td {
+    vertical-align: middle;
+}
+
+.ol-date {
+    line-height: 1;
+}
+
+.border-outline-danger {
+    border-color: #c12e2a !important;
+}
+
+.userInfoIcon {
+    min-width: 20px;
+    margin-right: 10px;
+    text-align: center;
+    font-size: 18px;
+}
+
+input.custom-date-picker {
+    width: 200px !important;
+}
+input.custom-date-picker.full-width {
+    width: 100% !important;
+}
+
+a.custom-date-picker {
+    position: relative;
+    margin-left: -25px;
+    top: 0;
+}
+
+.dp-container a.custom-date-picker {
+    position: relative;
+    margin-top: 31px;
+    /*right: 25px;*/
+}
+
+.dp-container input {
+    width: 100% !important;
+}
+
+h2 {
+    padding: 20px 0;
+}
+
+.darkness .table.data thead tr.paginator th,
+.darkness .table.data thead tr.paginator td,
+.darkness .grid thead tr.paginator td {
+    border-bottom: 1px solid #414449 !important;
+}
+
+.darkness .table.data tfoot th,
+.darkness .table.data tfoot td,
+.darkness .grid tfoot td {
+    padding: 0.75rem !important;
+    background-color: #202329;
+    border: none;
+    border-top: 1px solid #1f5994;
+    color: #777;
+    text-transform: uppercase;
+    font-size: 0.675rem;
+}
+
+.darkness .table.data tfoot tr.paginator th,
+.darkness .table.data tfoot tr.paginator td,
+.darkness .grid tfoot tr.paginator td {
+    border-top: 1px solid #414449 !important;
+}

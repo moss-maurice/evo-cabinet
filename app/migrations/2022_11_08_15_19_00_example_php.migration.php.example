@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * PHP-миграции
+ * 
+ * Теоретически, откат возможен, но реализации пока нет.
+ */
+
+use mmaurice\cabinet\core\helpers\CmdHelper;
+use mmaurice\cabinet\core\prototypes\MigrationPrototype;
+
+/**
+ * Обратить внимание на правило именования класса миграции
+ */
+class migration_2022_11_08_15_19_00_example_php extends MigrationPrototype
+{
+    /**
+     * Метод запуска кода миграции
+     */
+    public function run()
+    {
+        // Обязательно вернуть true или false
+    }
+}

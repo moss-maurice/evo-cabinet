@@ -1,0 +1,16 @@
+small.order {
+    cursor: pointer;
+    color: #777777;
+}
+
+small.order:hover {
+    color: #ffffff;
+}
+
+small.order.active {
+    color: #3481bc;
+}
+
+small.order.active:hover {
+    color: #014c8c;
+}
