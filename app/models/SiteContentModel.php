@@ -3,9 +3,9 @@
 namespace mmaurice\cabinet\models;
 
 use mmaurice\cabinet\core\App;
-use mmaurice\cabinet\core\models\SiteContentModel as ParentSiteContentModel;
+use mmaurice\cabinet\core\models\SiteContentModel as BasicSiteContentModel;
 
-class SiteContentModel extends ParentSiteContentModel
+class SiteContentModel extends BasicSiteContentModel
 {
     
 }

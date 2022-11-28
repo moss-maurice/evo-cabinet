@@ -3,10 +3,9 @@ class CabinetAuth {
     apiMethod = 'POST';
 
     constructor() {
-        var thisModule = this;
-
-        thisModule.initAuthFormHook();
-        thisModule.initRegisterFormHook();
+        this.initAuthFormHook();
+        this.initRegisterFormHook();
+        this.initRemindFormHook();
     }
 
     logTrace(groupTitle, groupLines = []) {
@@ -38,38 +37,39 @@ class CabinetAuth {
     initAuthFormHook() {
         var thisModule = this;
 
-        jQuery(document).find('.cab-container .cab-login form.form-signin').submit(function(event) {
+        jQuery(document).find('form#sign-in').submit(function(event) {
             event.preventDefault();
 
-            console.log('adsdas');
+            var action = jQuery(this).attr('action');
+            var method = jQuery(this).attr('method');
 
             jQuery.ajax({
-                url: thisModule.apiUrl + '/auth/login',
+                url: action,
                 data: {
-                    login: jQuery(this).find('input[name=login]').val(),
+                    email: jQuery(this).find('input[name=email]').val(),
+                    phone: jQuery(this).find('input[name=phone]').val(),
                     password: jQuery(this).find('input[name=password]').val(),
                     rememberMy: jQuery(this).find('input[name=remember-me]').val(),
                 },
-                type: 'POST',
+                type: method,
                 dataType: 'json',
                 async: false,
                 success: function(response) {
-                    thisModule.logTrace('Запрос авторизации (' + thisModule.apiUrl + '/auth/login)', [
+                    thisModule.logTrace('Запрос авторизации (' + action + ')', [
                         response,
                     ]);
 
                     if (response.code === 200) {
-                        jQuery(this).find('div.form-message').html('');
+                        jQuery(this).find('.form__msg').html('');
 
-                        thisModule.relocation(response.data.redirect);
+                        thisModule.relocation(response.redirectUrl);
                     } else {
-                        jQuery(this).find('div.form-message').html(response.message);
+                        jQuery(this).find('.form__msg').html(response.message);
                     }
 
-                    thisModule.relocation(response.data.redirect);
+                    thisModule.relocation(response.redirectUrl);
                 }
             });
-            return false;
         });
 
         return false;
@@ -78,50 +78,77 @@ class CabinetAuth {
     initRegisterFormHook() {
         var thisModule = this;
 
-        jQuery(document).find('.cab-container .cab-reg form.form-signin').submit(function(event) {
+        jQuery(document).find('form#sign-up').submit(function(event) {
             event.preventDefault();
 
-            console.log('adsdas');
+            var action = jQuery(this).attr('action');
+            var method = jQuery(this).attr('method');
 
             jQuery.ajax({
-                url: thisModule.apiUrl + '/auth/register',
+                url: action,
                 data: {
-                    login: jQuery(this).find('input[name=login]').val(),
-                    password: jQuery(this).find('input[name=password]').val(),
-                    passwordRetype: jQuery(this).find('input[name=password-retype]').val(),
+                    firstName: jQuery(this).find('input[name=firstName]').val(),
                     email: jQuery(this).find('input[name=email]').val(),
-                    fields: {
-                        phone: jQuery(this).find('input[name=phone]').val(),
-                        mobilephone: jQuery(this).find('input[name=phone-mobile]').val(),
-                        fax: jQuery(this).find('input[name=fax]').val(),
-                        zip: jQuery(this).find('input[name=zip-code]').val(),
-                        country: jQuery(this).find('select[name=country] option:selected').val(),
-                        state: jQuery(this).find('input[name=region]').val(),
-                        city: jQuery(this).find('input[name=city]').val(),
-                        street: jQuery(this).find('input[name=street]').val(),
-                        gender: jQuery(this).find('select[name=sex] option:selected').val(),
-                    },
+                    password: jQuery(this).find('input[name=password]').val(),
+                    passwordRetype: jQuery(this).find('input[name=passwordRetype]').val(),
                 },
-                type: 'POST',
+                type: method,
                 dataType: 'json',
                 async: false,
                 success: function(response) {
-                    thisModule.logTrace('Запрос регистрации (' + thisModule.apiUrl + '/auth/register)', [
+                    thisModule.logTrace('Запрос регистрации (' + method + ')', [
                         response,
                     ]);
 
                     if (response.code === 200) {
-                        jQuery(this).find('div.form-message').html('');
+                        jQuery(this).find('.form__msg').html('');
 
-                        thisModule.relocation(response.data.redirect);
+                        thisModule.relocation(response.redirectUrl);
                     } else {
-                        jQuery(this).find('div.form-message').html(response.message);
+                        jQuery(this).find('.form__msg').html(response.message);
                     }
 
-                    thisModule.relocation(response.data.redirect);
+                    thisModule.relocation(response.redirectUrl);
                 }
             });
-            return false;
+        });
+
+        return false;
+    }
+
+    initRemindFormHook() {
+        var thisModule = this;
+
+        jQuery(document).find('form#remind').submit(function(event) {
+            event.preventDefault();
+
+            var action = jQuery(this).attr('action');
+            var method = jQuery(this).attr('method');
+
+            jQuery.ajax({
+                url: action,
+                data: {
+                    email: jQuery(this).find('input[name=email]').val(),
+                },
+                type: method,
+                dataType: 'json',
+                async: false,
+                success: function(response) {
+                    thisModule.logTrace('Запрос смены пароля (' + method + ')', [
+                        response,
+                    ]);
+
+                    if (response.code === 200) {
+                        jQuery(this).find('.form__msg').html('');
+
+                        thisModule.relocation(response.redirectUrl);
+                    } else {
+                        jQuery(this).find('.form__msg').html(response.message);
+                    }
+
+                    thisModule.relocation(response.redirectUrl);
+                }
+            });
         });
 
         return false;

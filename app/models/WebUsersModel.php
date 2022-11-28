@@ -3,14 +3,14 @@
 namespace mmaurice\cabinet\models;
 
 use mmaurice\cabinet\core\App;
-use mmaurice\cabinet\core\models\WebUsersModel as ParentWebUsersModel;
+use mmaurice\cabinet\core\models\WebUsersModel as BasicWebUsersModel;
 use mmaurice\cabinet\helpers\ImagesHelper;
+use mmaurice\cabinet\models\OrdersPaymentsTransactionsModel;
 use mmaurice\cabinet\models\UserRolesModel;
 use mmaurice\cabinet\models\WebUserAttributesModel;
-use mmaurice\cabinet\models\OrdersPaymentsTransactionsModel;
 use mmaurice\cabinet\models\WebUserSettingsModel;
 
-class WebUsersModel extends ParentWebUsersModel
+class WebUsersModel extends BasicWebUsersModel
 {
     public $relations = [
         'settings' => ['id', [WebUserSettingsModel::class, 'webuser'], self::REL_MANY],

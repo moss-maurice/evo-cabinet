@@ -20,8 +20,14 @@
 <div class="conteiner-login">
     <div class="form-login">
         <div class="b-feedback">
-            <div class="feedback__header h3">Авторизация</div>
-            <form class="b-form form--feedback" id="sign-in" method="post" action="/lk/api/auth/login">
+            <div class="feedback__header h3">Регистрация</div>
+            <form class="b-form form--feedback" id="sign-up" method="post" action="/lk/api/auth/register">
+                <div class="form__row clr">
+                    <label for="form__e" class="form__label">Ваш имя</label>
+                    <div class="form__field">
+                        <input type="text" name="firstName" id="form__e" class="form__input required" required="">
+                    </div>
+                </div>
                 <div class="form__row clr">
                     <label for="form__e" class="form__label">Ваш email</label>
                     <div class="form__field">
@@ -29,22 +35,22 @@
                     </div>
                 </div>
                 <div class="form__row clr">
-                    <label for="form__e" class="form__label">Ваш Пароль</label>
+                    <label for="form__e" class="form__label">Ваш пароль</label>
                     <div class="form__field">
                         <input type="password" name="password" id="form__e" class="form__input required" required="">
                     </div>
                 </div>
                 <div class="form__row clr">
-                    <label>
-                        <input type="checkbox" required=""> Запомнить меня
-                    </label>
+                    <label for="form__e" class="form__label">Пароль ещё раз</label>
+                    <div class="form__field">
+                        <input type="password" name="passwordRetype" id="form__e" class="form__input required" required="">
+                    </div>
                 </div>
-                <div class="text-center">Нет аккаунта? <a href="/lk/register">Зарегистрироваться</a></div>
-                <div class="text-center">Забыли пароль? <a href="/lk/login/remind">Сбросить</a></div>
+                <div class="text-center">Уже есть аккаунт? <a href="/lk/login">Авторизироваться</a></div>
                 <div class="form__msg"></div>
                 <div class="form__row clr">
                     <div class="form__field">
-                        <input type="submit" name="submit" class="form__submit btn" value="Войти">
+                        <input type="submit" name="submit" class="form__submit btn" value="Регистрация">
                     </div>
                 </div>
             </form>

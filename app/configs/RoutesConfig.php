@@ -28,14 +28,14 @@ class RoutesConfig implements RoutesConfigPrototype
         // Auth
         '/{lk}/login' => 'auth/login',
         '/{lk}/login/master' => 'auth/master',
-        '/{lk}/login/restore' => 'auth/remindPassword',
+        '/{lk}/login/remind' => 'auth/remindPassword',
         '/{lk}/login/check-key' => 'auth/restore',
         '/{lk}/register' => 'auth/register',
         '/{lk}/logout' => 'auth/logout',
 
         // Api Auth
         '/{lk}/api/auth/login' => 'api/auth/login',
-        '/{lk}/api/auth/restore' => 'api/auth/remindPassword',
+        '/{lk}/api/auth/remind' => 'api/auth/remindPassword',
         '/{lk}/api/auth/register' => 'api/auth/register',
         '/{lk}/api/auth/check-code' => 'api/auth/checkCode',
 
