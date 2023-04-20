@@ -1,25 +1,26 @@
 <?php
 
 use mmaurice\cabinet\controllers\MailerController;
+use mmaurice\cabinet\core\App;
 use mmaurice\cabinet\helpers\ApiHelper;
 use mmaurice\cabinet\helpers\FileHelper;
 use mmaurice\cabinet\models\DocumentsDocxExcursionsFrontModel;
 use mmaurice\cabinet\models\DocumentsDocxToursFrontModel;
+use mmaurice\cabinet\models\OrdersModel;
+use mmaurice\cabinet\models\OrdersPaymentsTransactionsModel;
+use mmaurice\cabinet\models\OrdersPersonsModel;
+use mmaurice\cabinet\models\OrdersPlacesModel;
+use mmaurice\cabinet\models\OrdersStatusesModel;
 use mmaurice\cabinet\models\SiteContentExcursionsModel;
 use mmaurice\cabinet\models\SiteContentModel;
 use mmaurice\cabinet\models\SiteContentObjectsModel;
 use mmaurice\cabinet\models\SiteContentToursModel;
-use mmaurice\cabinet\models\OrdersModel;
-use mmaurice\cabinet\models\OrdersPersonsModel;
-use mmaurice\cabinet\models\OrdersPlacesModel;
-use mmaurice\cabinet\models\OrdersStatusesModel;
+use mmaurice\cabinet\models\TransactionsTypesModel;
 use mmaurice\cabinet\models\WebUserAttributesModel;
-use mmaurice\cabinet\models\OrdersPaymentsTransactionsModel;
 use mmaurice\cabinet\models\WebUserSettingsModel;
 use mmaurice\cabinet\models\WebUserThreadFilesModel;
 use mmaurice\cabinet\models\WebUserThreadMessagesModel;
 use mmaurice\cabinet\models\WebUserThreadsModel;
-use mmaurice\cabinet\core\App;
 
 class OrdersTabClass extends TabClass
 {
@@ -62,7 +63,7 @@ class OrdersTabClass extends TabClass
                     'order' => [
                         "t.position ASC",
                     ],
-                ], true),
+                ]),
             'pages' => $ordersList['pages'],
             'page' => $page,
             'limit' => $ordersList['limit'],
@@ -99,7 +100,7 @@ class OrdersTabClass extends TabClass
                 'where' => [
                     "t.id = '{$itemId}'",
                 ],
-            ], true);
+            ], ['user', 'payments.*', 'status', 'thread', 'tour', 'properties']);
 
             $userId = intval($order['user']['id']);
             $orderNumber = intval($order['id']);
@@ -122,7 +123,13 @@ class OrdersTabClass extends TabClass
                 'where' => [
                     "t.id = '{$itemId}'",
                 ],
-            ], true);
+            ], ['user', 'payments.*', 'status', 'thread', 'tour', 'properties']);
+
+            $transactions = TransactionsTypesModel::model()->getList([
+                'where' => [
+                    "alias !='" . TransactionsTypesModel::TRANSACTION_TEMP . "'",
+                ],
+            ]);
 
             return $this->render('view', [
                 'itemId' => $itemId,
@@ -132,8 +139,9 @@ class OrdersTabClass extends TabClass
                         'order' => [
                             "t.position ASC",
                         ],
-                    ], true),
+                    ]),
                 'payments' => OrdersPaymentsTransactionsModel::model()->getPaymentsByOrderId($id),
+                'transactions' => $transactions,
                 'message' => $message,
                 'errors' => $errors,
             ]);
@@ -170,11 +178,11 @@ class OrdersTabClass extends TabClass
 
                 $thread = WebUserThreadsModel::model()->getOrderThread($orderId);
 
-                // TODO
-                // тут появляется проблема, если не создан тред к заявке
-                // нужно понять почему треды не создаются
-                // нужно ли их создавать, если их нет
-                // нужно ли игнорировать?
+                if (!$thread) {
+                    WebUserThreadsModel::model()->addThread($orderId, 'Общение с менеджером', $order['user_id']);
+
+                    $thread = WebUserThreadsModel::model()->getOrderThread($orderId);
+                }
 
                 WebUserThreadMessagesModel::model()->addStatus($thread['id'], "Статус заявки изменен на \'{$status['name']}\'", 0);
 
@@ -244,7 +252,7 @@ class OrdersTabClass extends TabClass
                     'where' => [
                         "t.id = '{$itemId}'",
                     ],
-                ], true),
+                ]),
             ]);
         }
 
@@ -331,21 +339,51 @@ class OrdersTabClass extends TabClass
 
     public function actionAddOrderPayment()
     {
-        $itemId = App::request()->extractPost('item_id');
+        $orderId = App::request()->extractPost('item_id');
         $comment = App::request()->extractPost('comment', '');
         $transactionValue = floatval(App::request()->extractPost('transactionValue'));
-        $transactionType = App::request()->extractPost('transactionType', 1);
+        $transactionType = App::request()->extractPost('transactionType', TransactionsTypesModel::TRANSACTION_PAYMENT_ID);
 
-        if ($itemId and $transactionValue and $transactionType) {
-            $itemId = intval($itemId);
+        if ($orderId and $transactionValue and $transactionType) {
+            $orderId = intval($orderId);
             $transactionType = intval($transactionType);
 
             OrdersPaymentsTransactionsModel::model()->insert([
                 'transaction_value' => $transactionValue,
                 'transaction_type' => $transactionType,
                 'comment' => $comment,
-                'order_id' => $itemId,
+                'order_id' => $orderId,
             ]);
+
+            $order = OrdersModel::model()->getItem([
+                'where' => [
+                    "id = '{$orderId}'"
+                ],
+            ]);
+
+            $thread = WebUserThreadsModel::model()->getOrderThread($orderId);
+
+            if (!$thread) {
+                WebUserThreadsModel::model()->addThread($orderId, 'Общение с менеджером', $order['user_id']);
+
+                $thread = WebUserThreadsModel::model()->getOrderThread($orderId);
+            }
+
+            switch ($transactionType) {
+                case TransactionsTypesModel::TRANSACTION_DISCOUNT_ID:
+                    WebUserThreadMessagesModel::model()->addStatus($thread['id'], "Применена скидка в размере {$transactionValue} ₽" . (!empty($comment) ? " с коментарием \'{$comment}\'" : ''), 0);
+
+                    break;
+                case TransactionsTypesModel::TRANSACTION_MARGIN_ID:
+                    WebUserThreadMessagesModel::model()->addStatus($thread['id'], "Стоимость заявки увеличена на {$transactionValue} ₽" . (!empty($comment) ? " с коментарием \'{$comment}\'" : ''), 0);
+
+                    break;
+                case TransactionsTypesModel::TRANSACTION_PAYMENT_ID:
+                default:
+                    WebUserThreadMessagesModel::model()->addStatus($thread['id'], "Зачислена оплата в размере {$transactionValue} ₽" . (!empty($comment) ? " с коментарием \'{$comment}\'" : ''), 0);
+
+                    break;
+            }
         }
 
         return $this->actionView();

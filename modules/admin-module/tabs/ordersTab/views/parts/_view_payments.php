@@ -1,29 +1,16 @@
 <?php
 
-use mmaurice\cabinet\models\OrdersModel;
 use mmaurice\cabinet\core\helpers\FormatHelper;
-
+use mmaurice\cabinet\models\OrdersModel;
+use mmaurice\cabinet\models\TransactionsTypesModel;
 ?>
 
 <h3>Оплаты</h3>
-<h4 class="text-left alert alert-info">
-    <small>Сумма: <?= OrdersModel::model()->getOrderBasePrice($order['id']); ?> <?= $tour['tv']['priceLabel']; ?></small>
-    <small> | </small>
-<?php /*
-    <!-- <small>Стоимость тура: <?= OrdersModel::model()->getOrderPrice($order['id']); ?> <?= $tour['tv']['priceLabel']; ?></small> -->
-    <!-- <small> | </small> -->
-    <!-- <small>Платежи: <?= OrdersModel::model()->getOrderTotalPayments($order['id']) ?> <?= $tour['tv']['priceLabel']; ?></small> -->
-    <!-- <small> | </small> -->
-    <!-- <small>Штрафы/Скидки: <span id="payments-sum-all"><?= OrdersModel::model()->getOrderModPayments($order['id']); ?></span> <?= $tour['tv']['priceLabel']; ?></small> -->
-    <!-- <small> | </small> -->
-*/ ?>
-    <small>Остаток: <span id="payments-price-balance"><?= OrdersModel::model()->getOrderBalancePayments($order['id']); ?></span> <?= $tour['tv']['priceLabel']; ?></small>
-</h4>
 
 <table class="table data mb-4" cellpadding="1" cellspacing="1" id="payments-data-table">
     <thead>
         <tr>
-            <td class="tableHeader"># Оплаты</td>
+            <td class="tableHeader">#</td>
             <td class="tableHeader">Плательщик</td>
             <td class="tableHeader">Тип</td>
             <td class="tableHeader text-right">Размер</td>
@@ -32,18 +19,19 @@ use mmaurice\cabinet\core\helpers\FormatHelper;
             <td class="tableHeader"></td>
         </tr>
     </thead>
+
     <?php if (is_array($order['payments']) and !empty($order['payments'])) : ?>
         <tbody>
             <?php foreach ($order['payments'] as $payment) : ?>
                 <?php if (!intval($payment['deleted'])) : ?>
                     <tr>
-                        <td class="tableItem"><?= $payment['id']; ?></td>
+                        <td class="tableItem"><?= $payment['id']; ?>.</td>
                         <td class="tableItem">
                             <strong><?= trim($payment['payer'] ? $payment['payer'] : $payment['editor']); ?></strong>
                         </td>
                         <td class="tableItem"><?= $payment['transaction_type']['title']; ?></td>
-                        <td class="tableItem text-right">
-                            <?= number_format($payment['transaction_value'], 2, '.', ''); ?> <?= $tour['tv']['priceLabel']; ?>
+                        <td class="tableItem text-right font-weight-bold">
+                            <?= number_format($payment['transaction_value'], 2, '.', ''); ?> ₽
                         </td>
                         <td class="tableItem"><?= (!empty($payment['comment']) ? $payment['comment'] : '&mdash;'); ?></td>
                         <td class="tableItem"><?= FormatHelper::dateConvert($payment['create_date'], 'Y-m-d H:i:s', 'd.m.Y H:i:s'); ?></td>
@@ -62,18 +50,23 @@ use mmaurice\cabinet\core\helpers\FormatHelper;
     <tfoot>
         <tr>
             <td class="tableHeader text-right">Стоимость:</td>
-            <td class="tableHeader"><?= OrdersModel::model()->getOrderBalancePayments($order['id']); ?> <?= $tour['tv']['priceLabel']; ?></td>
-            <td class="tableHeader text-right">Итого:</td>
-            <td class="tableHeader"><?= OrdersModel::model()->getOrderTotalPayments($order['id']); ?> <?= $tour['tv']['priceLabel']; ?></td>
+            <td class="tableHeader font-weight-bold"><?= OrdersModel::model()->getOrderPrice($order['id']); ?> ₽</td>
+            <td class="tableHeader text-right">Оплачено:</td>
+            <td class="tableHeader font-weight-bold"><?= OrdersModel::model()->getOrderTotalPayments($order['id']); ?> ₽</td>
             <td class="tableHeader text-right">Остаток: </td>
-            <td class="tableHeader"><?= OrdersModel::model()->getOrderBalancePayments($order['id']); ?> <?= $tour['tv']['priceLabel']; ?></td>
+            <td class="tableHeader font-weight-bold"><?= OrdersModel::model()->getOrderBalancePayments($order['id']); ?> ₽</td>
             <td class="tableHeader text-right"></td>
         </tr>
     </tfoot>
     <tfoot>
         <tr>
             <td class="tableItem text-right" colspan="3">
-                <strong><small>* Для ввода скидки или снижения стоимости тура поставьте знак минус в поле цены</small></strong>
+                <?php if (is_array($transactions) and !empty($transactions)) : ?>
+                    <?php foreach ($transactions as $id => $transaction) : ?>
+                        <input type="radio" id="choice_<?= $transaction['alias']; ?>" class="transaction-type" value="<?= $transaction['id']; ?>"<?= ($transaction['alias'] === TransactionsTypesModel::TRANSACTION_PAYMENT ? ' checked' : ''); ?> />
+                        <label for="choice_<?= $transaction['alias']; ?>"><?= $transaction['title']; ?></label>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </td>
             <td class="tableItem text-right">
                 <input id="transaction-amount" type="number" style="width: 100px; text-align: right;" />

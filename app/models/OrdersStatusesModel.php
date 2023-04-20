@@ -9,24 +9,22 @@ class OrdersStatusesModel extends Model
 {
     const STATUS_ALL = 0;
 
-    const STATUS_WAITING_FOR_CONFIRMATION = 1;
-    const STATUS_AVAILABLE_FOR_PAYMENT = 2;
-    const STATUS_CANCELED = 3;
-    const STATUS_NOT_CONFIRMED = 4;
-    const STATUS_PAID = 5;
-    const STATUS_CONFIRMED = 6;
-    const STATUS_ARCHIVE = 7;
-    const STATUS_DELETED = 8;
+    const STATUS_CREATED = 1;
+    const STATUS_CONFIRMED = 2;
+    const STATUS_PAYED = 3;
+    const STATUS_DONE = 4;
+    const STATUS_ARCHIVE = 5;
+    const STATUS_DELETED = 6;
+    const STATUS_CANCELED = 7;
 
     public static $statuses = [
-        1 => 'Ожидает подтверждение',
-        2 => 'Доступна к оплате',
-        3 => 'Отменена',
-        4 => 'Не подтверждена',
-        5 => 'Оплачена',
-        6 => 'Подтверждена',
-        7 => 'Архивная',
-        8 => 'Удалена',
+        1 => 'Создано',
+        2 => 'Подтверждено',
+        3 => 'Оплачено',
+        4 => 'Завершено',
+        5 => 'Архив',
+        6 => 'Удалено',
+        7 => 'Отменено',
     ];
 
     public $tableName = 'orders_statuses';

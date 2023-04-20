@@ -5,6 +5,7 @@ namespace mmaurice\cabinet\controllers;
 use mmaurice\cabinet\components\ControllerComponent;
 use mmaurice\cabinet\core\App;
 use mmaurice\cabinet\models\OrdersModel;
+use mmaurice\cabinet\models\OrdersStatusesModel;
 use mmaurice\cabinet\models\WebUserThreadMessagesModel;
 use mmaurice\cabinet\models\WebUserThreadsModel;
 use mmaurice\cabinet\models\WebUsersModel;
@@ -40,10 +41,28 @@ class OrdersController extends ControllerComponent
                 "t.id = '{$orderId}'",
                 "AND user_id = '{$userId}'",
             ],
+        ], ['user', 'payments.*', 'status', 'thread', 'tour', 'properties']);
+
+        $thread = WebUserThreadsModel::model()->getItem([
+            'where' => [
+                "t.order_id = '{$orderId}'",
+                "AND t.webuser = '{$userId}'",
+            ],
         ], true);
+
+        $statuses = OrdersStatusesModel::model()->getList([
+            'where' => [
+                't.public = 1',
+            ],
+            'order' => [
+                't.position',
+            ],
+        ]);
 
         $this->render('view', [
             'order' => $order,
+            'thread' => $thread,
+            'statuses' => $statuses,
         ]);
     }
 
@@ -56,17 +75,53 @@ class OrdersController extends ControllerComponent
         $threadId = App::request()->extractPost('threadId');
         $userId = WebUsersModel::model()->getId();
         $message = App::request()->extractPost('messageText');
+        $replyTo = App::request()->extractPost('replyTo');
+        $messageId = App::request()->extractPost('messageId');
+        $removeId = App::request()->extractPost('removeId');
 
-        $thread = WebUserThreadsModel::model()->getItem([
-            'where' => [
-                "t.id = '{$threadId}'",
-                "AND t.order_id = '{$orderId}'",
-                "AND t.webuser = '{$userId}'",
-            ],
-        ], true);
+        $thread = null;
+
+        if ($threadId) {
+            $thread = WebUserThreadsModel::model()->getItem([
+                'where' => [
+                    "t.id = '{$threadId}'",
+                    "AND t.order_id = '{$orderId}'",
+                    "AND t.webuser = '{$userId}'",
+                ],
+            ], true);
+        }
+
+        if (!$thread) {
+            $threadId = WebUserThreadsModel::model()->addThread($orderId, 'Общение с менеджером', $userId);
+
+            $thread = WebUserThreadsModel::model()->getItem([
+                'where' => [
+                    "t.id = '{$threadId}'",
+                    "AND t.order_id = '{$orderId}'",
+                    "AND t.webuser = '{$userId}'",
+                ],
+            ], true);
+        }
 
         if ($thread) {
-            $message = WebUserThreadMessagesModel::model()->addMessage($threadId, $message, $userId);
+            if ($messageId) {
+                $checkMessage = WebUserThreadMessagesModel::model()->getItem([
+                    'where' => [
+                        "t.id = '{$messageId}'",
+                        "AND t.sender = '{$userId}'",
+                    ],
+                ]);
+
+                if ($checkMessage) {
+                    if ($removeId and ($messageId === $removeId)) {
+                        $message = WebUserThreadMessagesModel::model()->deleteMessage($messageId);
+                    } else {
+                        $message = WebUserThreadMessagesModel::model()->updateMessage($messageId, $message, $userId, $replyTo);
+                    }
+                }
+            } else {
+                $message = WebUserThreadMessagesModel::model()->addMessage($threadId, $message, $userId, $replyTo);
+            }
         }
 
         App::init()->redirect('/{lk}/order', [

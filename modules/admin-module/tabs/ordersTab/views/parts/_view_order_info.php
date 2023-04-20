@@ -1,14 +1,14 @@
 <?php
 
+use mmaurice\cabinet\core\helpers\FormatHelper;
 use mmaurice\cabinet\models\OrdersModel;
 use mmaurice\cabinet\models\ToursResidencesModel;
-use mmaurice\cabinet\core\helpers\FormatHelper;
 
 ?>
 
 <div id="order-item" rel-item-id="<?= $itemId; ?>" rel-tab="<?= $tabName; ?>" rel-method="update">
     <div class="row align-items-center">
-        <div class="col">
+        <div class="col-6">
             <h1>Заявка # <?= $itemId; ?></h1>
         </div>
         <div class="col ml-auto">
@@ -43,7 +43,6 @@ use mmaurice\cabinet\core\helpers\FormatHelper;
                     <?php endif; ?>
                 </td>
             </tr>
-
             <tr>
                 <td>Изменить базовую стоимость тура</td>
                 <td>
@@ -61,9 +60,9 @@ use mmaurice\cabinet\core\helpers\FormatHelper;
                 </tr>
             <?php endif; ?>
         </table>
-        <hr>
 
         <?php if (is_array($order['over_price']) and !empty($order['over_price'])) : ?>
+            <hr />
             <div class="row align-items-center">
                 <div class="col">
                     <h1>Свойства заявки</h1>
@@ -96,71 +95,6 @@ use mmaurice\cabinet\core\helpers\FormatHelper;
                     <?php endforeach; ?>
                 </tbody>
             </table>
-        <?php endif; ?>
-    </div>
-    <div class="col-12 col-lg-6">
-        <div class="my-2 d-flex align-items-center">
-            <div class="userInfoIcon">
-                <?php
-                if (intval($order['user']['attributes']['role']) == 5)
-                    echo '<i class="fas fa-user"></i>';
-                else if (intval($order['user']['attributes']['role']) == 6)
-                    echo '<i class="fas fa-user-tie"></i>';
-                ?>
-            </div>
-            <div class="">
-                <?= $order['user']['attributes']['fullname']; ?>
-                <small>(<?= $order['user']['id']; ?>)</small>
-                <input type="hidden" id="user-id" value="<?= $order['user']['id']; ?>" />
-            </div>
-        </div>
-        <?php if ($order['user']['settings']['type'] == 'agency') : ?>
-            <div class="my-2 d-flex align-items-center">
-                <small>Агентство</small> <?= $order['user']['settings']['agency']; ?>
-            </div>
-        <?php endif; ?>
-        <?php if ($order['user']['attributes']['email']) : ?>
-            <div class="my-2 d-flex align-items-center">
-                <div class="userInfoIcon"><i class="fas fa-envelope"></i></div>
-                <div class="">
-                    <a href="mailto:<?= $order['user']['attributes']['email']; ?>">
-                        <?= $order['user']['attributes']['email']; ?>
-                    </a>
-                </div>
-            </div>
-        <?php endif; ?>
-        <?php if ($order['user']['attributes']['phone']) : ?>
-            <div class="my-2 d-flex align-items-center">
-                <div class="userInfoIcon"><i class="fas fa-phone"></i></div>
-                <div class="">
-                    <?= FormatHelper::phoneFormat($order['user']['attributes']['phone']); ?>
-                </div>
-            </div>
-        <?php endif; ?>
-        <?php if ($order['user']['attributes']['mobilephone']) : ?>
-            <div class="my-2 d-flex align-items-center">
-                <div class="userInfoIcon"><i class="fas fa-mobile-alt"></i></div>
-                <div class="">
-                    <?= FormatHelper::phoneFormat($order['user']['attributes']['mobilephone']); ?>
-                </div>
-            </div>
-        <?php endif; ?>
-        <?php if ($order['user']['attributes']['fax']) : ?>
-            <div class="my-2 d-flex align-items-center">
-                <div class="userInfoIcon"><i class="fas fa-fax"></i></div>
-                <div class="">
-                    <?= FormatHelper::phoneFormat($order['user']['attributes']['fax']); ?>
-                </div>
-            </div>
-        <?php endif; ?>
-        <?php if ($order['user']['attributes']['city']) : ?>
-            <div class="my-2 d-flex align-items-center">
-                <div class="userInfoIcon"><i class="fas fa-map-marker-alt"></i></div>
-                <div class="">
-                    <?= $order['user']['attributes']['city']; ?>,
-                    <?= $order['user']['attributes']['street']; ?>
-                </div>
-            </div>
         <?php endif; ?>
     </div>
 </div>

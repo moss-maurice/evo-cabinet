@@ -37,7 +37,7 @@ class OrdersModel extends Model
             'where' => [
                 "t.id = '{$id}'",
             ],
-        ], true);
+        ], ['user', 'payments.*', 'status', 'thread', 'tour', 'properties']);
 
         return $order;
     }
@@ -76,16 +76,16 @@ class OrdersModel extends Model
         return number_format(0, $decimals, $decPoint, $thousandsSep);
     }
 
-    // Размер штрафов и скидок
+    // Размер наценок и скидок
     public function getOrderModPayments($orderId, $decimals = 2, $decPoint = '.', $thousandsSep = '')
     {
         $sanctions = $this->getOrderSanctionPayments($orderId, $decimals, $decPoint, $thousandsSep);
         $sales = $this->getOrderSales($orderId, $decimals, $decPoint, $thousandsSep);
 
-        return number_format(floatval($sanctions + $sales), $decimals, $decPoint, $thousandsSep);
+        return number_format(floatval($sanctions - $sales), $decimals, $decPoint, $thousandsSep);
     }
 
-    // Размер штрафов
+    // Размер наценки
     public function getOrderSanctionPayments($orderId, $decimals = 2, $decPoint = '.', $thousandsSep = '')
     {
         $price = 0;
@@ -95,10 +95,9 @@ class OrdersModel extends Model
                 "transaction_value",
             ],
             'where' => [
-                "t.transaction_type IN ('" . implode("', '", [TransactionsTypesModel::EDITED_BY_ADMIN_ID]) . "')",
+                "t.transaction_type = '" . TransactionsTypesModel::TRANSACTION_MARGIN_ID . "'",
                 "AND t.deleted = '0'",
-                "AND t.order_id = '" . $orderId . "'",
-                "AND t.transaction_value > '0'"
+                "AND t.order_id = '{$orderId}'",
             ],
         ]);
 
@@ -121,10 +120,9 @@ class OrdersModel extends Model
                 "transaction_value",
             ],
             'where' => [
-                "t.transaction_type IN ('" . implode("', '", [TransactionsTypesModel::EDITED_BY_ADMIN_ID]) . "')",
+                "t.transaction_type = '" . TransactionsTypesModel::TRANSACTION_DISCOUNT_ID . "'",
                 "AND t.deleted = '0'",
-                "AND t.order_id = '" . $orderId . "'",
-                "AND t.transaction_value < '0'"
+                "AND t.order_id = '{$orderId}'",
             ],
         ]);
 
@@ -137,38 +135,12 @@ class OrdersModel extends Model
         return number_format(floatval($price), $decimals, $decPoint, $thousandsSep);
     }
 
-    // Размер персональной скидки
-    public function getOrderUserSales($orderId, $decimals = 2, $decPoint = '.', $thousandsSep = '')
-    {
-        $price = 0;
-
-        $transactions = OrdersPaymentsTransactionsModel::model()->getList([
-            'select' => [
-                "transaction_value",
-            ],
-            'where' => [
-                "t.transaction_type IN ('" . implode("', '", [TransactionsTypesModel::PERSONAL_SALE_ID]) . "')",
-                "AND t.deleted = '0'",
-                "AND t.order_id = '" . $orderId . "'",
-            ],
-        ]);
-
-        if ($transactions) {
-            foreach ($transactions as $transaction) {
-                $price += floatval($transaction['transaction_value']);
-            }
-        }
-
-        return number_format(floatval(0 - abs($price)), $decimals, $decPoint, $thousandsSep);
-    }
-
     // Общий размер скидок
     public function getOrderSales($orderId, $decimals = 2, $decPoint = '.', $thousandsSep = '')
     {
         $paymentsSales = $this->getOrderSalesPayments($orderId, $decimals, $decPoint, $thousandsSep);
-        $userSales = $this->getOrderUserSales($orderId, $decimals, $decPoint, $thousandsSep);
 
-        return number_format(floatval(0 - (abs($paymentsSales) + abs($userSales))), $decimals, $decPoint, $thousandsSep);
+        return number_format(floatval($paymentsSales), $decimals, $decPoint, $thousandsSep);
     }
 
     // Размер фактических оплат
@@ -181,10 +153,9 @@ class OrdersModel extends Model
                 "transaction_value",
             ],
             'where' => [
-                "t.transaction_type IN ('" . implode("', '", [TransactionsTypesModel::INTERNET_PAYMENT, TransactionsTypesModel::TRANSACTION_TO_CARD, TransactionsTypesModel::CASH_TO_BANK_BY_PDF]) . "')",
+                "t.transaction_type = '" . TransactionsTypesModel::TRANSACTION_PAYMENT_ID . "'",
                 "AND t.deleted = '0'",
-                "AND t.order_id = '" . $orderId . "'",
-                "AND t.transaction_value > '0'",
+                "AND t.order_id = '{$orderId}'",
             ],
         ]);
 
@@ -197,7 +168,7 @@ class OrdersModel extends Model
         return number_format(floatval($price), $decimals, $decPoint, $thousandsSep);
     }
 
-    // Cтоимость заказа с учётом штрафов и скидок
+    // Cтоимость заказа с учётом наценок и скидок
     public function getOrderPrice($orderId, $decimals = 2, $decPoint = '.', $thousandsSep = '')
     {
         $price = floatval($this->getOrderBasePrice($orderId));
@@ -387,7 +358,7 @@ class OrdersModel extends Model
             ],
             'limit' => $limit,
             'offset' => ($limit * ($page - 1)) < 0 ? 0 : ($limit * ($page - 1)),
-        ], true);
+        ], ['user', 'payments.*', 'status', 'thread', 'tour', 'properties']);
 
         $result = [
             'ordersList' => $ordersList,
@@ -461,7 +432,7 @@ class OrdersModel extends Model
             ],
             'limit' => $limit,
             'offset' => ($limit * ($page - 1)) < 0 ? 0 : ($limit * ($page - 1)),
-        ], true);
+        ], ['user', 'payments.*', 'status', 'thread', 'tour', 'properties']);
 
         $result = [
             'ordersList' => $ordersList,
@@ -506,7 +477,7 @@ class OrdersModel extends Model
             ],
             'limit' => $limit,
             'offset' => ($limit * ($page - 1)) < 0 ? 0 : ($limit * ($page - 1)),
-        ], true);
+        ], ['user', 'payments.*', 'status', 'thread', 'tour', 'properties']);
 
         $result = [
             'ordersList' => $ordersList,
@@ -522,7 +493,7 @@ class OrdersModel extends Model
             'where' => [
                 "t.id = '" . $id . "' AND t.user_id = '" . $userId . "'"
             ],
-        ], true);
+        ], ['user', 'payments.*', 'status', 'thread', 'tour', 'properties']);
     }
 
     public function getHotelAddressById($id)

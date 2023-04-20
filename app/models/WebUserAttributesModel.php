@@ -4,6 +4,7 @@ namespace mmaurice\cabinet\models;
 
 use mmaurice\cabinet\core\App;
 use mmaurice\cabinet\core\models\WebUserAttributesModel as ParentWebUserAttributesModel;
+use mmaurice\cabinet\models\OrdersModel;
 use mmaurice\cabinet\models\UserRolesModel;
 
 class WebUserAttributesModel extends ParentWebUserAttributesModel
@@ -20,20 +21,16 @@ class WebUserAttributesModel extends ParentWebUserAttributesModel
      */
     public function getDataByOrderId($orderId)
     {
-        $ordersTable = $this->getFullTableName('tours_orders');
-        $usersAttrTable = $this->getFullTableName($this->tableName);
-
-        $resource = $this->query(
-            "SELECT `users_attr_table`.`email` as email FROM {$ordersTable} as orders_table
-                JOIN {$usersAttrTable} as users_attr_table ON `orders_table`.`user_id` = `users_attr_table`.`internalKey`
-            WHERE `orders_table`.`id` = {$orderId}"
-        );
-
-        $result = [];
-        while ($row = $this->db->getRow($resource)) {
-            $result[] = $row;
-        }
-
-        return $result;
+        return OrdersModel::model()->getList([
+            'select' => [
+                "ua.email as email",
+            ],
+            'join' => [
+                "LEFT JOIN " . static::getFullModelTableName() . " ua ON ua.internalKey = t.user_id",
+            ],
+            'where' => [
+                "t.orderId = '{$orderId}'",
+            ],
+        ]);
     }
 }

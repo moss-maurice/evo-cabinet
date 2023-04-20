@@ -7,19 +7,15 @@ use mmaurice\cabinet\models\Model;
 
 class TransactionsTypesModel extends Model
 {
-    const EDITED_BY_ADMIN = 'editedByAdmin';
-    const INTERNET_PAYMENT = 'internetPayment';
-    const TRANSACTION_TO_CARD = 'transactionToCard';
-    const CASH_TO_BANK_BY_PDF = 'cashToBankByPDF';
-    const TMP_TRANSACTION = 'tmpTransaction';
-    const PERSONAL_SALE = 'personalSale';
+    const TRANSACTION_DISCOUNT = 'discount';
+    const TRANSACTION_MARGIN = 'margin';
+    const TRANSACTION_PAYMENT = 'payment';
+    const TRANSACTION_TEMP = 'temp';
 
-    const EDITED_BY_ADMIN_ID = 1;
-    const INTERNET_PAYMENT_ID = 2;
-    const TRANSACTION_TO_CARD_ID = 3;
-    const CASH_TO_BANK_BY_PDF_ID = 4;
-    const TMP_TRANSACTION_ID = 5;
-    const PERSONAL_SALE_ID = 6;
+    const TRANSACTION_DISCOUNT_ID = 1;
+    const TRANSACTION_MARGIN_ID = 2;
+    const TRANSACTION_PAYMENT_ID = 3;
+    const TRANSACTION_TEMP_ID = 4;
 
     /**
      * Table name without prefix `evo_`

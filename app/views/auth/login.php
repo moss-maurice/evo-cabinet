@@ -1,53 +1,58 @@
 <?php use mmaurice\cabinet\core\App; ?>
 
-<style>
-    .conteiner-login {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        padding: 40px;
-    }
-    .form-login {
-        width: 500px;
-        height: fit-content;
-        border: 1px solid var(--base);
-        border-radius: 10px;
-        padding: 30px;
-    }
-</style>
-
-<div class="conteiner-login">
-    <div class="form-login">
-        <div class="b-feedback">
-            <div class="feedback__header h3">Авторизация</div>
-            <form class="b-form form--feedback" id="sign-in" method="post" action="/lk/api/auth/login">
-                <div class="form__row clr">
-                    <label for="form__e" class="form__label">Ваш email</label>
-                    <div class="form__field">
-                        <input type="email" name="email" id="form__e" class="form__input required" required="">
+<div class="row justify-content-center">
+    <div class="col-4 p-5 m-5">
+        <form action="<?= App::init()->makeUrl('/{lk}/api/auth/login') ?>" method="post" id="sign-in">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="d-none" for="email">Электронный адрес</label>
+                        <input type="email" name="email" class="form-control px-3 py-4 text-center" id="email"
+                            placeholder="Электронный адрес" />
                     </div>
                 </div>
-                <div class="form__row clr">
-                    <label for="form__e" class="form__label">Ваш Пароль</label>
-                    <div class="form__field">
-                        <input type="password" name="password" id="form__e" class="form__input required" required="">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="d-none" for="password">Пароль</label>
+                        <input type="password" name="password" class="form-control px-3 py-4 text-center" id=" password"
+                            placeholder="Пароль" />
                     </div>
                 </div>
-                <div class="form__row clr">
-                    <label>
-                        <input type="checkbox" required=""> Запомнить меня
-                    </label>
-                </div>
-                <div class="text-center">Нет аккаунта? <a href="/lk/register">Зарегистрироваться</a></div>
-                <div class="text-center">Забыли пароль? <a href="/lk/login/remind">Сбросить</a></div>
-                <div class="form__msg"></div>
-                <div class="form__row clr">
-                    <div class="form__field">
-                        <input type="submit" name="submit" class="form__submit btn" value="Войти">
+            </div>
+            <div class="row py-3">
+                <div class="col-sm-6 text-center pt-2">
+                    <div class="form-group form-check">
+                        <input type="checkbox" name="rememberMe" class="form-check-input" id="rememberMe">
+                        <label class="form-check-label" for="rememberMe">Запомнить меня</label>
                     </div>
                 </div>
-            </form>
-        </div>
+                <div class="col-sm-6 text-center">
+                    <div class="form-group p-0 m-0">
+                        <a class="bs btn btn-link" href="<?= App::init()->makeUrl('/{lk}/login/remind') ?>">Забыли
+                            пароль?</a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <input type="submit" name="submit" class="form__submit btn btn-primary bs col-12"
+                            value="Войти" />
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="border-top mt-3 text-center">
+                        <div class="px-4 py-1 bg-white col-1 d-inline" style="position: relative; top: -13px;">
+                            ИЛИ</div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <a class="btn btn-success bs col-12"
+                            href="<?= App::init()->makeUrl('/{lk}/register') ?>">Зарегистрироваться</a>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 </div>

@@ -2,9 +2,9 @@
 
 namespace mmaurice\cabinet\helpers;
 
+use mmaurice\cabinet\models\OrdersModel;
 use mmaurice\cabinet\models\SiteContentExcursionsModel;
 use mmaurice\cabinet\models\SiteContentToursModel;
-use mmaurice\cabinet\models\OrdersModel;
 
 class TourHelper
 {
@@ -16,7 +16,7 @@ class TourHelper
             'where' => [
                 "t.id = '{$orderId}'"
             ],
-        ), true);
+        ), ['user', 'payments.*', 'status', 'thread', 'tour', 'properties']);
 
         if (array_key_exists('arrive', $order) and !is_null($order['arrive'])) {
             if (array_key_exists('tour', $order['arrive']) and !is_null($order['arrive']['tour'])) {

@@ -1,59 +1,57 @@
 <?php use mmaurice\cabinet\core\App; ?>
-
-<style>
-    .conteiner-login {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        padding: 40px;
-    }
-    .form-login {
-        width: 500px;
-        height: fit-content;
-        border: 1px solid var(--base);
-        border-radius: 10px;
-        padding: 30px;
-    }
-</style>
-
-<div class="conteiner-login">
-    <div class="form-login">
-        <div class="b-feedback">
-            <div class="feedback__header h3">Регистрация</div>
-            <form class="b-form form--feedback" id="sign-up" method="post" action="/lk/api/auth/register">
-                <div class="form__row clr">
-                    <label for="form__e" class="form__label">Ваш имя</label>
-                    <div class="form__field">
-                        <input type="text" name="firstName" id="form__e" class="form__input required" required="">
+<div class="row justify-content-center">
+    <div class="col-4 p-5 m-5">
+        <form action="<?= App::init()->makeUrl('/{lk}/api/auth/register') ?>" method="post" id="sign-up">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="d-none" for="firstName">Ваше имя</label>
+                        <input type="text" name="firstName" class="form-control px-3 py-4 text-center" id="firstName"
+                            placeholder="Ваше имя" />
                     </div>
                 </div>
-                <div class="form__row clr">
-                    <label for="form__e" class="form__label">Ваш email</label>
-                    <div class="form__field">
-                        <input type="email" name="email" id="form__e" class="form__input required" required="">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="d-none" for="email">Электронный адрес</label>
+                        <input type="email" name="email" class="form-control px-3 py-4 text-center" id="email"
+                            placeholder="Электронный адрес" />
                     </div>
                 </div>
-                <div class="form__row clr">
-                    <label for="form__e" class="form__label">Ваш пароль</label>
-                    <div class="form__field">
-                        <input type="password" name="password" id="form__e" class="form__input required" required="">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="d-none" for="password">Ваш пароль</label>
+                        <input type="password" name="password" class="form-control px-3 py-4 text-center" id="password"
+                            placeholder="Ваш пароль" />
                     </div>
                 </div>
-                <div class="form__row clr">
-                    <label for="form__e" class="form__label">Пароль ещё раз</label>
-                    <div class="form__field">
-                        <input type="password" name="passwordRetype" id="form__e" class="form__input required" required="">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="d-none" for="passwordRetype">Ваш пароль ещё раз</label>
+                        <input type="password" name="passwordRetype" class="form-control px-3 py-4 text-center"
+                            id="passwordRetype" placeholder="Ваш пароль ещё раз" />
                     </div>
                 </div>
-                <div class="text-center">Уже есть аккаунт? <a href="/lk/login">Авторизироваться</a></div>
-                <div class="form__msg"></div>
-                <div class="form__row clr">
-                    <div class="form__field">
-                        <input type="submit" name="submit" class="form__submit btn" value="Регистрация">
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <input type="submit" name="submit" class="form__submit btn btn-primary bs col-12"
+                            value="Зарегистрироваться" />
                     </div>
                 </div>
-            </form>
-        </div>
+                <div class="col-sm-12">
+                    <div class="border-top mt-3 text-center">
+                        <div class="px-4 py-1 bg-white col-1 d-inline" style="position: relative; top: -13px;">
+                            ИЛИ</div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <a class="btn btn-success bs col-12"
+                            href="<?= App::init()->makeUrl('/{lk}/login') ?>">Авторизоваться</a>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 </div>

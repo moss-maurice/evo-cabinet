@@ -1,45 +1,64 @@
-/* profile */
-.upload-row .upload-button .jq-file,
-.upload-row .add-button .jq-file { display: none; }
-.upload-row .upload-button input[type="file"],
-.upload-row .add-button input[type="file"] { display: none; width: 0.1px; height: 0.1px; opacity: 0; overflow: hidden; position: absolute; z-index: -1; }
-
-/* messages */
-.subject-input input[name="subject"] { width: 100%; box-sizing: border-box; padding: 15px; max-width: 100%; border: 1px solid #a9a9a9; outline: none; resize: vertical; margin: 0 0 20px 0; }
-.detail-message .jq-file { display: none; }
-.detail-message input[type="file"] { display: none; width: 0.1px; height: 0.1px; opacity: 0; overflow: hidden; position: absolute; z-index: -1; }
-a.edit-but:hover,
-a.add-but:hover { color: #ffffff; }
-.tour-options { height: 50px; }
-.last-messages table td.unread { font-weight: bold; }
-
-/* orders */
-.inprogress { display: inline-block; vertical-align: top; margin-left: 15px; color: #f1c40f; font-weight: normal; }
-.inprogress span { margin-right: 5px; }
-
-/* auth */
-.cab-login {
-    max-width: 380px;
-    margin: 0 auto;
-    background: #fbfbfb;
-    padding: 30px 30px 20px;
-    box-shadow: 0px 0px 3px 0px #ccc;
+.horizontal-timeline .items {
+    border-top: 2px solid #ddd;
 }
 
-.ticket-docs .col-12 .jq-file { width: 100%; }
-
-
-.cab-login input[type='text'],
-.cab-login input[type='email'],
-.cab-login input[type='password'],
-.cab-login input[type='tel']{
-    height: 2.5rem;
-    width: 100%
+.horizontal-timeline .items .items-list {
+    position: relative;
+    margin-right: 0;
 }
 
-.cab-login .btn {
-    text-transform: none;
+.horizontal-timeline .items .items-list:before {
+    content: "";
+    position: absolute;
+    height: 8px;
+    width: 8px;
+    border-radius: 50%;
+    background-color: #ddd;
+    top: 0;
+    margin-top: -5px;
 }
-.cab-login .btn[type="submit"] {
-    text-transform: uppercase;
+
+.horizontal-timeline .items .items-list {
+    padding-top: 15px;
+}
+
+.chat {
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: 500px;
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.bg-chat-admin {
+    background-color: #bdc3c7;
+}
+
+.bg-chat-user {
+    background-color: #3498db;
+    color: #ffffff;
+}
+
+#reply-board {
+    position: relative;
+}
+
+/*
+#reply-board:before {
+    content: "\00d7";
+    position: absolute;
+    display: block;
+    top: 0;
+    right: 0;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 20px;
+    text-align: center;
+}
+*/
+.chat .reply,
+.chat .edit,
+.chat .delete {
+    cursor: pointer;
 }

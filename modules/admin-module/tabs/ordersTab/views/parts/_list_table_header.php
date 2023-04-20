@@ -44,6 +44,6 @@ use mmaurice\cabinet\widgets\SortChevronWidget;
                 </td>
                 <td class="tableHeader">Оплата</td>
                 <td class="tableHeader">Статус</td>
-                <td class="tableHeader" colspan="<?= (!in_array(intval($orderItem['status']['id']), [OrdersStatusesModel::STATUS_ARCHIVE, OrdersStatusesModel::STATUS_DELETED]) ? 3 : 1); ?>"></td>
+                <td class="tableHeader"></td>
             </tr>
         </thead>

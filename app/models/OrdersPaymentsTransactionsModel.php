@@ -5,6 +5,7 @@ namespace mmaurice\cabinet\models;
 use mmaurice\cabinet\core\App;
 use mmaurice\cabinet\models\Model;
 use mmaurice\cabinet\models\OrdersModel;
+use mmaurice\cabinet\models\OrdersPaymentsTransactionsReasonsModel;
 use mmaurice\cabinet\models\OrdersStatusesModel;
 use mmaurice\cabinet\models\TransactionsTypesModel;
 use mmaurice\cabinet\models\WebUsersModel;
@@ -22,7 +23,7 @@ class OrdersPaymentsTransactionsModel extends Model
     public $tableName = 'orders_payments_transactions';
     public $relations = [
         'user' => ['user_id', [WebUsersModel::class, 'id'], self::REL_ONE],
-        'transaction_type' => ['transaction_type', [TransactionsTypesModel::class, 'id'], self::REL_ONE]
+        'transaction_type' => ['transaction_type', [TransactionsTypesModel::class, 'id'], self::REL_ONE],
     ];
 
     public function addUserPaymentTransaction(array $data)
@@ -33,8 +34,6 @@ class OrdersPaymentsTransactionsModel extends Model
     public static function applyOrderPersonalSale($orderId)
     {
         $statuses = [
-            OrdersStatusesModel::STATUS_WAITING_FOR_CONFIRMATION,
-            OrdersStatusesModel::STATUS_NOT_CONFIRMED,
             OrdersStatusesModel::STATUS_CONFIRMED,
         ];
 
@@ -82,7 +81,7 @@ class OrdersPaymentsTransactionsModel extends Model
                 $saleDesc = self::isAbsoluteSale($saleValue) ? "{$saleValue} руб." : self::extractRelativeSaleValue($saleValue) . "%";
 
                 if ($sale < 0) {
-                    // Находим транзакцию по заявка
+                    // Находим транзакцию по заявкам
                     $personalSaleTransaction = self::model()->getItem([
                         'select' => [
                             "t.*",
@@ -90,7 +89,7 @@ class OrdersPaymentsTransactionsModel extends Model
                         'where' => [
                             "t.deleted = '0'",
                             "AND t.order_id = '{$orderId}'",
-                            "AND t.transaction_type = '" . TransactionsTypesModel::PERSONAL_SALE_ID . "'",
+                            "AND t.transaction_type = '" . TransactionsTypesModel::TRANSACTION_DISCOUNT . "'",
                         ],
                     ]);
 
@@ -104,7 +103,7 @@ class OrdersPaymentsTransactionsModel extends Model
 
                     self::model()->insert([
                         'transaction_value' => $sale,
-                        'transaction_type' => TransactionsTypesModel::PERSONAL_SALE_ID,
+                        'transaction_type' => TransactionsTypesModel::TRANSACTION_DISCOUNT_ID,
                         'order_id' => $order['id'],
                         'user_id' => $userId,
                         'editor' => 'system',

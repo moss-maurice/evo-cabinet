@@ -125,6 +125,11 @@ class DatesHelper
         return intval(FormatHelper::dateConvert($date, 'Y-m-d H:i:s', 'd')) . ' ' . str_replace(self::$translations['months']['nums'], self::$translations['months']['normal']['ru'], FormatHelper::dateConvert($date, 'Y-m-d H:i:s', 'm'));
     }
 
+    static public function getTime($date)
+    {
+        return FormatHelper::dateConvert($date, 'Y-m-d H:i:s', 'H:i');
+    }
+
     static public function getWeekDayShortNameDate($date)
     {
         $dayNum = intval(FormatHelper::dateConvert($date, 'Y-m-d H:i:s', 'w')) - 1;

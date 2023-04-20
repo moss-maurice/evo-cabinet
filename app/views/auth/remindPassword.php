@@ -1,42 +1,37 @@
 <?php use mmaurice\cabinet\core\App; ?>
 
-<style>
-    .conteiner-login {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        padding: 40px;
-    }
-    .form-login {
-        width: 500px;
-        height: fit-content;
-        border: 1px solid var(--base);
-        border-radius: 10px;
-        padding: 30px;
-    }
-</style>
-
-<div class="conteiner-login">
-    <div class="form-login">
-        <div class="b-feedback">
-            <div class="feedback__header h3">Восстановление пароля</div>
-            <form class="b-form form--feedback" id="remind" method="post" action="/lk/api/auth/remind">
-                <div class="form__row clr">
-                    <label for="form__e" class="form__label">Ваш email</label>
-                    <div class="form__field">
-                        <input type="email" name="email" id="form__e" class="form__input required" required="">
-                    </div>
-                </div>	
-                <div class="text-center">Нет аккаунта? <a href="/lk/register">Зарегистрироваться</a></div>
-                <div class="text-center">Есть аккаунт? <a href="/lk/login">Авторизироваться</a></div>
-                <div class="form__msg"></div>
-                <div class="form__row clr">
-                    <div class="form__field">
-                        <input type="submit" name="submit" class="form__submit btn" value="Отправить">
+<div class="row justify-content-center">
+    <div class="col-4 p-5 m-5">
+        <form action="<?= App::init()->makeUrl('/{lk}/api/auth/remind') ?>" method="post" id="remind">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="d-none" for="email">Введите ваш электронный адрес для сброса пароля</label>
+                        <input type="email" name="email" class="form-control px-3 py-4 text-center" id="email"
+                            placeholder="Введите ваш электронный адрес для сброса пароля" />
                     </div>
                 </div>
-            </form>
-        </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <input type="submit" name="submit" class="form__submit btn btn-primary bs col-12"
+                            value="Сбросить пароль" />
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="border-top mt-3 text-center">
+                        <div class="px-4 py-1 bg-white col-1 d-inline" style="position: relative; top: -13px;">
+                            ИЛИ</div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <a class="btn btn-success bs col-12"
+                            href="<?= App::init()->makeUrl('/{lk}/login') ?>">Авторизоваться</a>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 </div>

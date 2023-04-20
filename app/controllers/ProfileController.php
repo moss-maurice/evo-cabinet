@@ -43,16 +43,16 @@ class ProfileController extends ControllerComponent
          */
         $password = App::request()->extractPost('password', '');
         $passwordRetype = App::request()->extractPost('password-retype', '');
-        $firstName = App::request()->extractPost('firstName', '');
-        $lastName = App::request()->extractPost('lastName', '');
-        $middleName = App::request()->extractPost('middleName', '');
-        $sex = App::request()->extractPost('sex', '');
+        $firstName = App::request()->extractPost('first_name', '');
+        $lastName = App::request()->extractPost('last_name', '');
+        $middleName = App::request()->extractPost('middle_name', '');
+        $gender = App::request()->extractPost('gender', '');
         $email = App::request()->extractPost('email', '');
         $phone = App::request()->extractPost('phone', '');
-        $mobilePhone = App::request()->extractPost('phone-mobile', '');
+        $mobilePhone = App::request()->extractPost('mobilephone', '');
         $fax = App::request()->extractPost('fax', '');
         $country = App::request()->extractPost('country', '');
-        $region = App::request()->extractPost('region', '');
+        $state = App::request()->extractPost('state', '');
         $city = App::request()->extractPost('city', '');
         $street = App::request()->extractPost('street', '');
         $zip = App::request()->extractPost('zip', '');
@@ -86,11 +86,11 @@ class ProfileController extends ControllerComponent
                 'email' => !empty($email) ? $email : '',
                 'phone' => !empty($phone) ? $phone : '',
                 'mobilephone' => !empty($mobilePhone) ? $mobilePhone : '',
-                'gender' => !empty($sex) ? $sex : '',
+                'gender' => !empty($gender) ? $gender : '',
                 'country' => !empty($country) ? $country : '',
                 'street' => !empty($street) ? $street : '',
                 'city' => !empty($city) ? $city : '',
-                'state' => !empty($region) ? $region : '',
+                'state' => !empty($state) ? $state : '',
                 'fax' => !empty($fax) ? $fax : '',
 
                 'agency' => !empty($agency) ? $agency : '',

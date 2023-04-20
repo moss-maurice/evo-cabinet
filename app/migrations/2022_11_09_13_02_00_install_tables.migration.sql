@@ -159,6 +159,7 @@ CREATE TABLE IF NOT EXISTS `{table_prefix}orders_statuses` (
     `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Уникальный идентификатор',
     `name` varchar(256) NOT NULL COMMENT 'Наименование',
     `position` int(11) DEFAULT '0' COMMENT 'Позиция элемента',
+    `public` int(1) DEFAULT '0' COMMENT 'Публичный статус',
     `create_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT 'Дата создания',
     `update_date` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT 'Дата обновления',
     PRIMARY KEY (`id`)
@@ -182,20 +183,6 @@ CREATE TABLE IF NOT EXISTS `{table_prefix}orders` (
     CONSTRAINT `{table_prefix}orders_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `{table_prefix}web_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT `{table_prefix}orders_ibfk_3` FOREIGN KEY (`tour_id`) REFERENCES `{table_prefix}site_content` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE='InnoDB' DEFAULT CHARSET='utf8' COMMENT='Таблица заказов';
-
-DROP TABLE IF EXISTS `{table_prefix}orders_payments`;
-CREATE TABLE IF NOT EXISTS `{table_prefix}orders_payments` (
-    `id` int(11) NOT NULL,
-    `order_id` int(11) NOT NULL,
-    `value` float NOT NULL,
-    `type` varchar(256) NOT NULL,
-    `transaction` varchar(256) NOT NULL,
-    `payer` varchar(256) NOT NULL,
-    `create_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT 'Дата создания',
-    `update_date` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT 'Дата обновления',
-    KEY `order_id` (`order_id`),
-    CONSTRAINT `{table_prefix}orders_payments_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `{table_prefix}orders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE='InnoDB' DEFAULT CHARSET='utf8';
 
 DROP TABLE IF EXISTS `{table_prefix}orders_payments_transactions`;
 CREATE TABLE IF NOT EXISTS `{table_prefix}orders_payments_transactions` (
@@ -321,27 +308,23 @@ ON DUPLICATE KEY UPDATE
 INSERT INTO `{table_prefix}transactions_types`
     (`id`, `title`, `alias`, `create_date`, `update_date`)
 VALUES
-    (1, 'Изменена администратором', 'editedByAdmin', NULL, NULL),
-    (2, 'Интернет оплата', 'internetPayment', NULL, NULL),
-    (3, 'Перевод на карту', 'transactionToCard', NULL, NULL),
-    (4, 'Наличными в банке по pdf-счету', 'cashToBankByPDF', NULL, NULL),
-    (5, 'Временная транзакция', 'tmpTransaction', NULL, NULL),
-    (6, 'Персональная скидка', 'personalSale', NULL, NULL)
+    (1, 'Скидка', 'discount', NULL, NULL),
+    (2, 'Наценка', 'margin', NULL, NULL),
+    (3, 'Оплата', 'payment', NULL, NULL),
+    (4, 'Временная транзакция', 'temp', NULL, NULL),
 ON DUPLICATE KEY UPDATE
     `title` = VALUES(`title`),
     `alias` = VALUES(`alias`);
 
 INSERT INTO `{table_prefix}orders_statuses`
-    (`id`, `name`, `position`, `create_date`, `update_date`)
+    (`id`, `name`, `position`, `public`, `create_date`, `update_date`)
 VALUES
-    (1, 'Доступно к оплате', 5, NULL, NULL),
-    (2, 'Ожидание подтверждения', 1, NULL, NULL),
-    (3, 'Отменено', 3, NULL, NULL),
-    (4, 'Не подтверждена', 2, NULL, NULL),
-    (5, 'Оплачено', 6, NULL, NULL),
-    (6, 'Подтверждено', 4, NULL, NULL),
-    (7, 'Архив', 7, NULL, NULL),
-    (8, 'Удалено', 8, NULL, NULL)
+    (1, 'Создано', 1, 1, NULL, NULL),
+    (2, 'Подтверждено', 2, 1, NULL, NULL),
+    (3, 'Оплачено', 3, 1, NULL, NULL),
+    (4, 'Завершено', 4, 1, NULL, NULL),
+    (5, 'Архив', NULL, 0, NULL, NULL),
+    (6, 'Удалено', NULL, 0, NULL, NULL)
 ON DUPLICATE KEY UPDATE
     `name` = VALUES(`name`),
     `position` = VALUES(`position`);
