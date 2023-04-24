@@ -212,6 +212,7 @@ class migration_2022_11_09_13_13_00_install_contents extends MigrationPrototype
                         $fields = array_filter([
                             'pagetitle' => $this->pageName,
                             'alias' => 'lk',
+                            'hidemenu' => 1,
                             'published' => 1,
                             'template' => $template['id'],
                             'searchable' => 0,
