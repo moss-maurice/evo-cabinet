@@ -4,6 +4,7 @@
 <?php use mmaurice\cabinet\widgets\PageTitleWidget; ?>
 <?php use mmaurice\cabinet\helpers\DatesHelper; ?>
 <?php use mmaurice\cabinet\core\helpers\FormatHelper; ?>
+<?php use mmaurice\cabinet\models\OrdersStatusesModel; ?>
 
 <?php $userId = WebUsersModel::model()->getId(); ?>
 <?php global $modx; ?>
@@ -39,10 +40,10 @@
                         <div class="h5 font-weight-normal"><?= DatesHelper::getSpelledDate($order['update_date']); ?>
                         </div>
                     </div>
+                    <?php endif; ?>
                 </div>
-                <?php endif; ?>
                 <?php if (!empty($order['comment'])) : ?>
-                <div class="form-group col-sm-12 py-3 px-0 m-0">
+                <div class="form-group mx-5 py-3 px-0">
                     <label class="m-0 h6 font-weight-normal">Комментарий</label>
                     <div class="h5 font-weight-normal"><?= $order['comment']; ?></div>
                 </div>
@@ -71,6 +72,25 @@
                             <?= OrdersModel::model()->getOrderBalancePayments($order['id']) . ' ₽'; ?>
                         </div>
                     </div>
+                    <?php if (in_array(intval($order['status']['id']), [OrdersStatusesModel::STATUS_CONFIRMED])) : ?>
+                    <?php if (OrdersModel::model()->getOrderBalancePayments($order['id']) > 0) : ?>
+                    <?php if (is_array($paymentsPlugins) and !empty($paymentsPlugins)) : ?>
+                    <div class="row d-flex justify-content-center">
+                        <?php foreach ($paymentsPlugins as $plugin) : ?>
+                        <div class="col-auto p-3">
+                            <?php if ($plugin['name'] === 'Sberbank Payment') : ?>
+                            {{payButton ?
+                                &amount=`<?= OrdersModel::model()->getOrderBalancePayments($order['id']); ?>`
+                                &tmpl=`button`
+                                &buttonCaption=`Оплата Онлайн`
+                            }}
+                            <?php endif; ?>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                    <?php endif; ?>
+                    <?php endif; ?>
+                    <?php endif; ?>
                 </div>
             </div>
             <?php endif; ?>
@@ -129,7 +149,7 @@
                         <?php else: ?>
                         <?php if (intval($message['sender']) !== $userId) : ?>
                         <div class="row justify-content-start py-2" rel-data-id="<?= $message['id']; ?>">
-                            <div class="col-sm-9 bg-chat-admin rounded py-2 px-3">
+                            <div class="col-sm-9 bg-secondary text-white rounded py-2 px-3">
                                 <div class="font-weight-bold" style="font-size: 12px;">Менеджер:</div>
                                 <?php if ($message['reply_to']):  ?>
                                 <div class="pb-1 px-2 mt-2 mx-2 border-left border-secondary font-italic">
@@ -150,7 +170,7 @@
                         </div>
                         <?php else : ?>
                         <div class="row justify-content-end py-2" rel-data-id="<?= $message['id']; ?>">
-                            <div class="col-sm-9 bg-chat-user rounded py-2 px-3">
+                            <div class="col-sm-9 bg-primary text-white rounded py-2 px-3">
                                 <div class="font-weight-bold" style="font-size: 12px;">Вы:</div>
                                 <?php if ($message['reply_to']):  ?>
                                 <div class="pb-1 px-2 mt-2 mx-2 border-left border-white font-italic">
@@ -177,9 +197,9 @@
                         <?php endforeach; ?>
                         <?php endif; ?>
                         <?php else: ?>
-                        <div class="h5 font-weight-normal text-center m-5 py-5">Если у вас есть вопрос, можете
-                            задать
-                            его нам!</div>
+                        <div class="h5 font-weight-normal text-center m-5 py-5">
+                            Если у вас есть вопрос, можете задать его нам!
+                        </div>
                         <?php endif; ?>
                     </div>
                 </div>

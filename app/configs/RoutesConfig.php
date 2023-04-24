@@ -40,6 +40,6 @@ class RoutesConfig implements RoutesConfigPrototype
         '/{lk}/api/auth/check-code' => 'api/auth/checkCode',
 
         // API
-        '/{lk}/api/order' => 'api/rder/index',
+        '/{lk}/api/order' => 'api/order/index',
     ];
 }

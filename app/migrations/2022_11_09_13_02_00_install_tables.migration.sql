@@ -319,12 +319,13 @@ ON DUPLICATE KEY UPDATE
 INSERT INTO `{table_prefix}orders_statuses`
     (`id`, `name`, `position`, `public`, `create_date`, `update_date`)
 VALUES
-    (1, 'Создано', 1, 1, NULL, NULL),
-    (2, 'Подтверждено', 2, 1, NULL, NULL),
-    (3, 'Оплачено', 3, 1, NULL, NULL),
-    (4, 'Завершено', 4, 1, NULL, NULL),
-    (5, 'Архив', NULL, 0, NULL, NULL),
-    (6, 'Удалено', NULL, 0, NULL, NULL)
+    (1, 'Новая', 1, 1, NULL, NULL),
+    (2, 'Подтверждена', 2, 1, NULL, NULL),
+    (3, 'Оплачена', 3, 1, NULL, NULL),
+    (4, 'Завершена', 4, 1, NULL, NULL),
+    (5, 'В архиве', NULL, 0, NULL, NULL),
+    (6, 'Удалена', NULL, 0, NULL, NULL),
+    (7, 'Отменена', NULL, 0, NULL, NULL)
 ON DUPLICATE KEY UPDATE
     `name` = VALUES(`name`),
     `position` = VALUES(`position`);

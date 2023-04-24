@@ -6,6 +6,7 @@ use mmaurice\cabinet\components\ControllerComponent;
 use mmaurice\cabinet\core\App;
 use mmaurice\cabinet\models\OrdersModel;
 use mmaurice\cabinet\models\OrdersStatusesModel;
+use mmaurice\cabinet\models\SitePlugins;
 use mmaurice\cabinet\models\WebUserThreadMessagesModel;
 use mmaurice\cabinet\models\WebUserThreadsModel;
 use mmaurice\cabinet\models\WebUsersModel;
@@ -59,10 +60,18 @@ class OrdersController extends ControllerComponent
             ],
         ]);
 
+        $paymentsPlugins = SitePlugins::model()->getList([
+            'where' => [
+                "t.name IN ('" . implode("', '", ['Sberbank Payment', ]) . "')",
+                "AND t.disabled = '0'",
+            ],
+        ]);
+
         $this->render('view', [
             'order' => $order,
             'thread' => $thread,
             'statuses' => $statuses,
+            'paymentsPlugins' => $paymentsPlugins,
         ]);
     }
 

@@ -523,7 +523,7 @@ class OrdersModel extends Model
     public function setOrder($tourId = null, $userId = null, $price = 0, $comment = null, array $properties = [])
     {
         $orderId = null;
-        $statusId = OrdersStatusesModel::STATUS_WAITING_FOR_CONFIRMATION;
+        $statusId = OrdersStatusesModel::STATUS_NEW;
 
         $userId = !is_null($userId) && !empty($userId) ? intval($userId) : WebUsersModel::model()->getId();
 
@@ -560,9 +560,10 @@ class OrdersModel extends Model
 
                     WebUserThreadMessagesModel::model()->addStatus($threadId, "Заявка создана. Статус заявки изменен на \'{$status['name']}\'");
 
-                    if (!is_null($userId) and !is_null($orderId)) {
+                    // Email notification
+                    /*if (!is_null($userId) and !is_null($orderId)) {
                         (new MailerController)->actionSendNewOrder($userId, $orderId);
-                    }
+                    }*/
                 }
             }
         }
