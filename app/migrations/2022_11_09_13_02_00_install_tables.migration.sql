@@ -311,7 +311,7 @@ VALUES
     (1, 'Скидка', 'discount', NULL, NULL),
     (2, 'Наценка', 'margin', NULL, NULL),
     (3, 'Оплата', 'payment', NULL, NULL),
-    (4, 'Временная транзакция', 'temp', NULL, NULL),
+    (4, 'Временная транзакция', 'temp', NULL, NULL)
 ON DUPLICATE KEY UPDATE
     `title` = VALUES(`title`),
     `alias` = VALUES(`alias`);
