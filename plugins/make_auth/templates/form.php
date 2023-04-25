@@ -1,6 +1,6 @@
 <?php use mmaurice\cabinet\core\App; ?>
 
-<div class="text-right m-0 p-0">
+<div id="header-auth" class="logged text-right m-0 p-0">
     <a href="<?= App::init()->makeUrl('/{lk}') ?>" class="btn btn-link btn-sm bs p-0 m-0 font-weight-bold">Личный
         кабинет</a>
     <span class="px-1 text-primary">|</span>
