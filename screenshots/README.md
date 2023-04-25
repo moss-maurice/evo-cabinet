@@ -45,3 +45,7 @@
 
 ### _Пример простого ответа на успешное бронирование тура на сайте_
 [![Пример простого ответа на успешное бронирование тура на сайте](https://raw.githubusercontent.com/moss-maurice/evo-cabinet/latest/screenshots/16.png)](https://raw.githubusercontent.com/moss-maurice/evo-cabinet/latest/screenshots/16.png)
+
+### _Ссылки личного кабинета в шапке сайта_
+[![Ссылки личного кабинета в шапке сайта](https://raw.githubusercontent.com/moss-maurice/evo-cabinet/latest/screenshots/17.png)](https://raw.githubusercontent.com/moss-maurice/evo-cabinet/latest/screenshots/17.png)
+[![Ссылки личного кабинета в шапке сайта](https://raw.githubusercontent.com/moss-maurice/evo-cabinet/latest/screenshots/18.png)](https://raw.githubusercontent.com/moss-maurice/evo-cabinet/latest/screenshots/18.png)

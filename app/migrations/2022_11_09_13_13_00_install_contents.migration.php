@@ -13,33 +13,67 @@ class migration_2022_11_09_13_13_00_install_contents extends MigrationPrototype
 {
     protected $categoryName = 'Cabinet';
     protected $templateName = 'Cabinet Template';
-    protected $pluginName = 'Cabinet Web Handler';
-    protected $orderPluginName = 'Make Order for Cabinet';
     protected $moduleName = 'Модуль управления';
     protected $pageName = 'Личный кабинет';
-
-    protected $pluginEvents = [20, 91, 214, 1000];
-    protected $orderPluginEvents = [92];
+    protected $plugins = [
+        [
+            'name' => 'Cabinet Web Handler',
+            'events' => [20, 91, 214, 1000],
+            'description' => '<strong>0.1</strong> Private User Cabinet web-frontend for ModX Evolution 1.4.x',
+            'code' => "require_once realpath(MODX_BASE_PATH . \\'/cabinet/plugins/cabinet_web_handler/cabinet_web_handler.php\\');\r\n",
+        ],
+        [
+            'name' => 'Make Order for Cabinet',
+            'events' => [92],
+            'description' => '<strong>0.1</strong> Order form for Private User Cabinet',
+            'code' => "require_once realpath(MODX_BASE_PATH . \\'/cabinet/plugins/make_order/make_order.php\\');\r\n",
+        ],
+        [
+            'name' => 'Make Auth for Cabinet',
+            'events' => [92],
+            'description' => '<strong>0.1</strong> Auth form for Private User Cabinet',
+            'code' => "require_once realpath(MODX_BASE_PATH . \\'/cabinet/plugins/make_auth/make_auth.php\\');\r\n",
+        ],
+    ];
 
     public function run()
     {
-        $categoryModel = CategoriesModel::model();
+        $category = $this->makeCategory();
 
-        $category = $categoryModel->getItem([
+        if ($category) {
+            $template = $this->makeTemplate($category);
+
+            if ($template) {
+                $this->makePlugins($category);
+                $module = $this->makeModule($category);
+                $page = $this->makePage($template);
+
+                if ($page) {
+                    return $this->makeEnv($module, $page);
+                }
+            }
+        }
+
+        return false;
+    }
+
+    protected function makeCategory()
+    {
+        $result = CategoriesModel::model()->getItem([
             'where' => [
                 "t.category = '{$this->categoryName}'",
             ],
         ]);
 
-        if (!$category) {
+        if (!$result) {
             $fields = array_filter([
                 'category' => $this->categoryName,
             ]);
 
-            if ($categoryModel->insert($fields)) {
-                $categoryId = $categoryModel->getInsertId();
+            if (CategoriesModel::model()->insert($fields)) {
+                $categoryId = CategoriesModel::model()->getInsertId();
 
-                $category = $categoryModel->getItem([
+                $result = CategoriesModel::model()->getItem([
                     'where' => [
                         "t.id = '{$categoryId}'",
                     ],
@@ -47,204 +81,178 @@ class migration_2022_11_09_13_13_00_install_contents extends MigrationPrototype
             }
         }
 
-        if ($category) {
-            $templateModel = SiteTemplatesModel::model();
+        return $result;
+    }
 
-            $template = $templateModel->getItem([
-                'where' => [
-                    "t.templatename = '{$this->templateName}'",
-                ],
+    protected function makeTemplate($category)
+    {
+        $result = SiteTemplatesModel::model()->getItem([
+            'where' => [
+                "t.templatename = '{$this->templateName}'",
+            ],
+        ]);
+
+        if (!$result) {
+            $fields = array_filter([
+                'templatename' => $this->templateName,
+                'description' => 'Cabinet default template',
+                'category' => $category['id'],
+                'content' => "{{header}}\r\n<main class=\"b-main\">\r\n    [*content*]\r\n</main>\r\n{{footer}}",
+                'createdon' => time(),
+                'editedon' => time(),
             ]);
 
-            if (!$template) {
+            if (SiteTemplatesModel::model()->insert($fields)) {
+                $templateId = SiteTemplatesModel::model()->getInsertId();
+
+                $result = SiteTemplatesModel::model()->getItem([
+                    'where' => [
+                        "t.id = '{$templateId}'",
+                    ],
+                ]);
+            }
+        }
+    }
+
+    protected function makePlugins($category)
+    {
+        if (is_array($this->plugins) and !empty($this->plugins)) {
+            foreach ($this->plugins as $plugin) {
+                $result = SitePlugins::model()->getItem([
+                    'where' => [
+                        "t.name = '{$plugin['name']}'",
+                    ],
+                ]);
+
+                if (!$result) {
+                    $fields = array_filter([
+                        'name' => $plugin['name'],
+                        'description' => $plugin['description'],
+                        'category' => $category['id'],
+                        'plugincode' => $plugin['code'],
+                        'createdon' => time(),
+                        'editedon' => time(),
+                    ]);
+
+                    if (SitePlugins::model()->insert($fields)) {
+                        $pluginId = SitePlugins::model()->getInsertId();
+
+                        $result = SitePlugins::model()->getItem([
+                            'where' => [
+                                "t.id = '{$pluginId}'",
+                            ],
+                        ]);
+                    }
+                }
+
+                if ($result) {
+                    $this->makeEvents($result, $plugin['events']);
+                }
+            }
+        }
+    }
+
+    protected function makeEvents($plugin, array $events)
+    {
+        if (is_array($events) and !empty($events)) {
+            foreach ($events as $event) {
                 $fields = array_filter([
-                    'templatename' => $this->templateName,
-                    'description' => 'Cabinet default template',
-                    'category' => $category['id'],
-                    'content' => "{{header}}\r\n<main class=\"b-main\">\r\n    [*content*]\r\n</main>\r\n{{footer}}",
-                    'createdon' => time(),
-                    'editedon' => time(),
+                    'pluginid' => $plugin['id'],
+                    'evtid' => $event,
                 ]);
 
-                if ($templateModel->insert($fields)) {
-                    $templateId = $templateModel->getInsertId();
-
-                    $template = $templateModel->getItem([
-                        'where' => [
-                            "t.id = '{$templateId}'",
-                        ],
-                    ]);
+                if (SitePluginsEvents::model()->insert($fields)) {
+                    // do nothing!
                 }
             }
+        }
+    }
 
-            if ($template) {
-                $pluginModel = SitePlugins::model();
+    protected function makeModule($category)
+    {
+        $result = SiteModules::model()->getItem([
+            'where' => [
+                "t.name = '{$this->moduleName}'",
+            ],
+        ]);
 
-                $plugin = $pluginModel->getItem([
+        if (!$result) {
+            $fields = array_filter([
+                'name' => $this->moduleName,
+                'description' => '<strong>0.1</strong> Private User Cabinet admin module for ModX Evolution 1.4.x',
+                'category' => $category['id'],
+                'createdon' => time(),
+                'editedon' => time(),
+                'guid' => '1205f5fe31dbb0d6cd2d16394b8f2e53',
+                'properties' => '{}',
+                'modulecode' => "require_once realpath(MODX_BASE_PATH . \\'/cabinet/modules/admin-module/admin-module.php\\');\r\n",
+            ]);
+
+            if (SiteModules::model()->insert($fields)) {
+                $moduleId = SiteModules::model()->getInsertId();
+
+                $result = SiteModules::model()->getItem([
                     'where' => [
-                        "t.name = '{$this->pluginName}'",
+                        "t.id = '{$moduleId}'",
                     ],
                 ]);
-
-                if (!$plugin) {
-                    $fields = array_filter([
-                        'name' => $this->pluginName,
-                        'description' => '<strong>0.1</strong> Private User Cabinet web-frontend for ModX Evolution 1.4.x',
-                        'category' => $category['id'],
-                        'plugincode' => "require_once realpath(MODX_BASE_PATH . \\'/cabinet/plugins/cabinet_web_handler/cabinet_web_handler.php\\');\r\n",
-                        'createdon' => time(),
-                        'editedon' => time(),
-                    ]);
-
-                    if ($pluginModel->insert($fields)) {
-                        $pluginId = $pluginModel->getInsertId();
-
-                        $plugin = $pluginModel->getItem([
-                            'where' => [
-                                "t.id = '{$pluginId}'",
-                            ],
-                        ]);
-                    }
-                }
-
-                if ($plugin) {
-                    if (is_array($this->pluginEvents) and !empty($this->pluginEvents)) {
-                        $pluginEventModel = SitePluginsEvents::model();
-
-                        foreach ($this->pluginEvents as $eventId) {
-                            $fields = array_filter([
-                                'pluginid' => $plugin['id'],
-                                'evtid' => $eventId,
-                            ]);
-
-                            if ($pluginEventModel->insert($fields)) {
-                                // do nothing!
-                            }
-                        }
-                    }
-                }
-
-                $plugin = $pluginModel->getItem([
-                    'where' => [
-                        "t.name = '{$this->orderPluginName}'",
-                    ],
-                ]);
-
-                if (!$plugin) {
-                    $fields = array_filter([
-                        'name' => $this->orderPluginName,
-                        'description' => '<strong>0.1</strong> Order form for Private User Cabinet',
-                        'category' => $category['id'],
-                        'plugincode' => "require_once realpath(MODX_BASE_PATH . \\'/cabinet/plugins/make_order/make_order.php\\');\r\n",
-                        'createdon' => time(),
-                        'editedon' => time(),
-                    ]);
-
-                    if ($pluginModel->insert($fields)) {
-                        $pluginId = $pluginModel->getInsertId();
-
-                        $plugin = $pluginModel->getItem([
-                            'where' => [
-                                "t.id = '{$pluginId}'",
-                            ],
-                        ]);
-                    }
-                }
-
-                if ($plugin) {
-                    if (is_array($this->orderPluginEvents) and !empty($this->orderPluginEvents)) {
-                        $pluginEventModel = SitePluginsEvents::model();
-
-                        foreach ($this->orderPluginEvents as $eventId) {
-                            $fields = array_filter([
-                                'pluginid' => $plugin['id'],
-                                'evtid' => $eventId,
-                            ]);
-
-                            if ($pluginEventModel->insert($fields)) {
-                                // do nothing!
-                            }
-                        }
-                    }
-                }
-
-                $moduleModel = SiteModules::model();
-
-                $module = $moduleModel->getItem([
-                    'where' => [
-                        "t.name = '{$this->moduleName}'",
-                    ],
-                ]);
-
-                if (!$module) {
-                    $fields = array_filter([
-                        'name' => $this->moduleName,
-                        'description' => '<strong>0.1</strong> Private User Cabinet admin module for ModX Evolution 1.4.x',
-                        'category' => $category['id'],
-                        'createdon' => time(),
-                        'editedon' => time(),
-                        'guid' => '1205f5fe31dbb0d6cd2d16394b8f2e53',
-                        'properties' => '{}',
-                        'modulecode' => "require_once realpath(MODX_BASE_PATH . \\'/cabinet/modules/admin-module/admin-module.php\\');\r\n",
-                    ]);
-
-                    if ($moduleModel->insert($fields)) {
-                        $moduleId = $moduleModel->getInsertId();
-
-                        $module = $moduleModel->getItem([
-                            'where' => [
-                                "t.id = '{$moduleId}'",
-                            ],
-                        ]);
-                    }
-                }
-
-                if ($module) {
-                    $pageModel = SiteContentModel::model();
-
-                    $page = $pageModel->getItem([
-                        'where' => [
-                            "t.pagetitle = '{$this->pageName}'",
-                        ],
-                    ]);
-
-                    if (!$page) {
-                        $fields = array_filter([
-                            'pagetitle' => $this->pageName,
-                            'alias' => 'lk',
-                            'hidemenu' => 1,
-                            'published' => 1,
-                            'template' => $template['id'],
-                            'searchable' => 0,
-                            'cacheable' => 0,
-                            'createdby' => 1,
-                            'createdon' => time(),
-                            'editedby' => 1,
-                            'editedon' => time(),
-                            'publishedby' => 1,
-                            'publishedon' => time(),
-                        ]);
-
-                        if ($pageModel->insert($fields)) {
-                            $pageId = $pageModel->getInsertId();
-
-                            $page = $pageModel->getItem([
-                                'where' => [
-                                    "t.id = '{$pageId}'",
-                                ],
-                            ]);
-                        }
-                    }
-
-                    if ($page) {
-                        file_put_contents(realpath(dirname(__FILE__) . '/../../') . '/.env', "HANDLE_PAGE={$page['id']}\r\nLOGGER_LEVEL=0\r\nMODULE_MAIN={$module['id']}\r\n");
-
-                        echo "  >>> Autoconfigure ENV-file placed in '" . realpath(dirname(__FILE__) . '/../../.env') . "'!" . PHP_EOL;
-
-                        return true;
-                    }
-                }
             }
+        }
+
+        return $result;
+    }
+
+    protected function makePage($template)
+    {
+        $result = SiteContentModel::model()->getItem([
+            'where' => [
+                "t.pagetitle = '{$this->pageName}'",
+            ],
+        ]);
+
+        if (!$result) {
+            $fields = array_filter([
+                'pagetitle' => $this->pageName,
+                'alias' => 'lk',
+                'hidemenu' => 1,
+                'published' => 1,
+                'template' => $template['id'],
+                'searchable' => 0,
+                'cacheable' => 0,
+                'createdby' => 1,
+                'createdon' => time(),
+                'editedby' => 1,
+                'editedon' => time(),
+                'publishedby' => 1,
+                'publishedon' => time(),
+            ]);
+
+            if (SiteContentModel::model()->insert($fields)) {
+                $pageId = SiteContentModel::model()->getInsertId();
+
+                $result = SiteContentModel::model()->getItem([
+                    'where' => [
+                        "t.id = '{$pageId}'",
+                    ],
+                ]);
+            }
+        }
+
+        return $result;
+    }
+
+    protected function makeEnv($module, $page)
+    {
+        $envFilePath = realpath(dirname(__FILE__) . '/../../') . DIRECTORY_SEPARATOR . '.env';
+
+        $envBody = "HANDLE_PAGE={$page['id']}\r\nLOGGER_LEVEL=0\r\nMODULE_MAIN={$module['id']}\r\n";
+
+        file_put_contents($envFilePath, $envBody);
+
+        if (realpath($envFilePath)) {
+            echo "  >>> Autoconfigure ENV-file placed in '{$envFilePath}'!" . PHP_EOL;
+
+            return true;
         }
 
         return false;
