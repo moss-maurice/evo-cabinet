@@ -1,8 +1,5 @@
-<?php
-
-use mmaurice\cabinet\models\UserRolesModel;
-
-?>
+<?php use mmaurice\cabinet\models\UserRolesModel; ?>
+<?php use mmaurice\cabinet\core\App; ?>
 
 <tbody>
     <?php foreach ($usersList as $userItem) : ?>
@@ -46,8 +43,10 @@ use mmaurice\cabinet\models\UserRolesModel;
                     class="btn btn-danger removeContact lk-module-button" title="Удалить контакт">
                     <i class="fa fa-trash"></i>
                 </span>
-                <a href="/lk/login/master?masterLogin=<?= $userItem['username']; ?>&masterPass=<?= md5($userItem['username']); ?>"
-                    target="_blank" class="btn btn-primary" title="Залогиниться под этим пользователем">
+                <a href="<?= App::init()->makeUrl('/{lk}/login/master', [
+                    'masterLogin' => $userItem['username'],
+                    'masterPass' => md5($userItem['username']),
+                ]); ?>" target="_blank" class="btn btn-primary" title="Залогиниться под этим пользователем">
                     <i class="fas fa-sign-in-alt"></i>
                 </a>
             </div>

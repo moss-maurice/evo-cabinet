@@ -92,7 +92,7 @@ class AuthController extends ApiControllerComponent
 
                             $this->code = 200;
                             $this->message = 'Success login';
-                            $this->redirectUrl = App::init()->makeUrl('/lk/');
+                            $this->redirectUrl = App::init()->makeUrl('/{lk}');
                         }
                     } else {
                         $this->code = 400;
@@ -115,7 +115,7 @@ class AuthController extends ApiControllerComponent
 
                         $this->code = 200;
                         $this->message = 'Success login';
-                        $this->redirectUrl = App::init()->makeUrl('/lk/');
+                        $this->redirectUrl = App::init()->makeUrl('/{lk}');
                     } else {
                         $this->code = 400;
                         $this->message = 'Login or password is not valide';

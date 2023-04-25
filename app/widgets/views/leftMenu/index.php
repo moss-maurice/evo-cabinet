@@ -19,7 +19,7 @@
     <?php endif; ?>
 
     <div class="col-auto p-0 m-0">
-        <a href="/lk/logout" type="button" class="bs btn btn-link">
+        <a href="<?= App::init()->makeUrl('/{lk}/logout'); ?>" type="button" class="bs btn btn-link">
             <i class="fas fa-power-off"></i> Выйти
         </a>
     </div>

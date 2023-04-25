@@ -42,7 +42,9 @@ class WebUserThreadFilesModel extends Model
         $row['ext'] = pathinfo($row['real_file_name'], PATHINFO_EXTENSION);
         $row['name'] = $row['file_name'];
         $row['file_name'] = "{$row['file_name']}.{$row['ext']}";
-        $row['real_file_path'] = "lk/api/user/messages/download?fileId={$row['id']}";
+        $row['real_file_path'] = App::init()->makeUrl('/{lk}/api/user/messages/download', [
+            'fileId' => $row['id'],
+        ]);
 
         return $row;
     }
