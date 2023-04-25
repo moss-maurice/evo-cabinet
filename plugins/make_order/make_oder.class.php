@@ -2,6 +2,8 @@
 
 class MakeOrderPlugin
 {
+    const ACTOR_TAG = 'cabinetOrder';
+
     public static function getParams()
     {
         global $modx;
@@ -29,7 +31,7 @@ class MakeOrderPlugin
 
         $content = &$modx->documentOutput;
 
-        if (preg_match('/(?:\{\{)cabinetOrder(?:\}\}|\s*\?\s*([^\}]+)\}\})/imu', $content, $matches)) {
+        if (preg_match('/(?:\{\{)' . static::ACTOR_TAG . '(?:\}\}|\s*\?\s*([^\}]+)\}\})/imu', $content, $matches)) {
             return $matches;
         }
 
@@ -38,6 +40,8 @@ class MakeOrderPlugin
 
     protected static function extractChunkParamas()
     {
+        global $modx;
+
         $params = [];
 
         if (static::chunkRunned()) {
@@ -48,6 +52,10 @@ class MakeOrderPlugin
                     $params[str_replace('amp;', '', $matches[1][$i])] = $matches[2][$i];
                 }
             }
+        }
+
+        if (!array_key_exists('tourId', $params)) {
+            $params['tourId'] = $modx->documentIdentifier;
         }
 
         return $params;

@@ -25,16 +25,13 @@
     <tbody>
         <?php foreach ($pagination['ordersList'] as $index => $order) : ?>
         <tr>
-            <td class="p-2" scope="row"><?= ($index + 1) ?>.</td>
+            <td class="p-2" scope="row"><?= ($pagination['item']['start'] + $index) ?>.</td>
             <td class="p-2">№ <?= $order['id']; ?></td>
             <td class="p-2">
                 <strong><?= (isset($order['tour']) ? $order['tour']['pagetitle'] : '&mdash;'); ?></strong>
             </td>
             <td class="p-2">
                 <?= DatesHelper::getSpelledDate($order['create_date']); ?>
-                <?php if (!is_null($order['update_date'])) : ?>
-                <div>Обновлено: <?= DatesHelper::getSpelledDate($order['update_date']); ?></div>
-                <?php endif; ?>
             </td>
             <td class="p-2"><?= $order['status']['name']; ?></td>
             <td class="p-2 text-right"><?= OrdersModel::model()->getOrderPrice($order['id']) ?> ₽</td>

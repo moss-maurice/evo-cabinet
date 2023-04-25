@@ -20,7 +20,7 @@ class OrdersController extends ControllerComponent
 
         $userId = WebUsersModel::model()->getId();
 
-        $pagination = OrdersModel::model()->getOrdersListByPagination(App::request()->extractGet('page', 1), null, [
+        $pagination = OrdersModel::model()->getOrdersListByPagination(App::request()->extractGet('page', 1), 10, [
             'user_id' => $userId,
         ]);
 
