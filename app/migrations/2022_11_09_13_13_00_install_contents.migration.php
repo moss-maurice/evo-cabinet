@@ -1,6 +1,5 @@
 <?php
 
-use mmaurice\cabinet\core\helpers\CmdHelper;
 use mmaurice\cabinet\core\prototypes\MigrationPrototype;
 use mmaurice\cabinet\models\CategoriesModel;
 use mmaurice\cabinet\models\SiteContentModel;
@@ -112,6 +111,8 @@ class migration_2022_11_09_13_13_00_install_contents extends MigrationPrototype
                 ]);
             }
         }
+
+        return $result;
     }
 
     protected function makePlugins($category)
