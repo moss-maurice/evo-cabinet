@@ -21,10 +21,7 @@ class AuthController extends ControllerComponent
      * @param void
      * @return void
      */
-    public function actionIndex()
-    {
-        
-    }
+    public function actionIndex() {}
 
     public function actionMaster()
     {

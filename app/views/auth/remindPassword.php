@@ -12,6 +12,7 @@
                     </div>
                 </div>
             </div>
+            <div class="d-none error"></div>
             <div class="row">
                 <div class="col-sm-12">
                     <div class="form-group">

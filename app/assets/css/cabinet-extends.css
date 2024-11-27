@@ -62,3 +62,13 @@
 .chat .delete {
     cursor: pointer;
 }
+
+.error {
+    text-align: center;
+    padding: 0px 20px 20px 20px;
+    color: red;
+}
+
+.error.d-none {
+    padding: 0;
+}

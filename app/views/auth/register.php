@@ -1,4 +1,6 @@
-<?php use mmaurice\cabinet\core\App; ?>
+<?php
+
+use mmaurice\cabinet\core\App; ?>
 <div class="row justify-content-center">
     <div class="col-4 p-5 m-5">
         <form action="<?= App::init()->makeUrl('/{lk}/api/auth/register') ?>" method="post" id="sign-up">
@@ -32,6 +34,7 @@
                     </div>
                 </div>
             </div>
+            <div class="d-none error"></div>
             <div class="row">
                 <div class="col-sm-12">
                     <div class="form-group">

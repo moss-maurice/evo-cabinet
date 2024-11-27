@@ -57,15 +57,19 @@ class CabinetAuth {
                     success: function (response) {
                         thisModule.logTrace("Запрос авторизации (" + action + ")", [response]);
 
+                        jQuery(document).find(".error").addClass("d-none").text("");
+
                         if (response.code === 200) {
                             jQuery(this).find(".form__msg").html("");
-
-                            thisModule.relocation(response.redirectUrl);
                         } else {
                             jQuery(this).find(".form__msg").html(response.message);
+
+                            jQuery(document).find(".error").text(response.message).removeClass("d-none");
                         }
 
-                        thisModule.relocation(response.redirectUrl);
+                        if (response.redirectUrl.length > 0) {
+                            thisModule.relocation(response.redirectUrl);
+                        }
                     },
                 });
             });
@@ -98,15 +102,19 @@ class CabinetAuth {
                     success: function (response) {
                         thisModule.logTrace("Запрос регистрации (" + method + ")", [response]);
 
+                        jQuery(document).find(".error").addClass("d-none").text("");
+
                         if (response.code === 200) {
                             jQuery(this).find(".form__msg").html("");
-
-                            thisModule.relocation(response.redirectUrl);
                         } else {
                             jQuery(this).find(".form__msg").html(response.message);
+
+                            jQuery(document).find(".error").text(response.message).removeClass("d-none");
                         }
 
-                        thisModule.relocation(response.redirectUrl);
+                        if (response.redirectUrl.length > 0) {
+                            thisModule.relocation(response.redirectUrl);
+                        }
                     },
                 });
             });
@@ -136,15 +144,19 @@ class CabinetAuth {
                     success: function (response) {
                         thisModule.logTrace("Запрос смены пароля (" + method + ")", [response]);
 
+                        jQuery(document).find(".error").addClass("d-none").text("");
+
                         if (response.code === 200) {
                             jQuery(this).find(".form__msg").html("");
-
-                            thisModule.relocation(response.redirectUrl);
                         } else {
                             jQuery(this).find(".form__msg").html(response.message);
+
+                            jQuery(document).find(".error").text(response.message).removeClass("d-none");
                         }
 
-                        thisModule.relocation(response.redirectUrl);
+                        if (response.redirectUrl.length > 0) {
+                            thisModule.relocation(response.redirectUrl);
+                        }
                     },
                 });
             });

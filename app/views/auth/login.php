@@ -19,6 +19,7 @@
                     </div>
                 </div>
             </div>
+            <div class="d-none error"></div>
             <div class="row py-3">
                 <div class="col-sm-6 text-center pt-2">
                     <div class="form-group form-check">

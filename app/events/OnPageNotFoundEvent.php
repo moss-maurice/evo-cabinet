@@ -44,7 +44,7 @@ class OnPageNotFoundEvent extends EventPrototype
 
                     $map = $app->makeUrl($routeMap);
 
-                    $router->before('GET|POST', $map, function() use ($className, $actionName) {
+                    $router->before('GET|POST', $map, function () use ($className, $actionName) {
                         RequestClass::$controller = $className;
                         RequestClass::$method = $actionName;
                     });
@@ -53,7 +53,7 @@ class OnPageNotFoundEvent extends EventPrototype
                 }
             }
 
-            $router->set404(function() {
+            $router->set404(function () {
                 // do nothing
                 return;
             });

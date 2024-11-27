@@ -52,8 +52,7 @@ class AuthController extends ApiControllerComponent
      * @param void
      * @return void
      */
-    public function actionIndex()
-    {}
+    public function actionIndex() {}
 
     /**
      * Метод авторизации.
@@ -102,7 +101,8 @@ class AuthController extends ApiControllerComponent
                     $this->code = 400;
                     $this->message = 'Login or password is empty';
                 }
-            } else*/ if ($authField === 'email') {
+            } else*/
+            if ($authField === 'email') {
                 $login = $userModel->getLoginByEmail($email);
 
                 if (!empty($password) and !empty($login)) {
@@ -114,23 +114,23 @@ class AuthController extends ApiControllerComponent
                         }
 
                         $this->code = 200;
-                        $this->message = 'Success login';
+                        $this->message = 'Успешный вход в личный кабинет';
                         $this->redirectUrl = App::init()->makeUrl('/{lk}');
                     } else {
                         $this->code = 400;
-                        $this->message = 'Login or password is not valide';
+                        $this->message = 'Логин или пароль не верны';
                     }
                 } else {
                     $this->code = 400;
-                    $this->message = 'Login or password is empty';
+                    $this->message = 'Логин или пароль пусты';
                 }
             }
         } else {
             $this->code = 400;
-            $this->message = 'Allowed only POST-requests';
+            $this->message = 'Разрешены только POST-запросы';
         }
 
-        return $this->render(($this->userData ? $this->userData[0] : []), self::CODE_SUCCESS, ($this->code ? $this->code : 400), ($this->message ? $this->message : 'Error'));
+        return $this->render(($this->userData ? $this->userData[0] : []), self::CODE_SUCCESS, ($this->code ? $this->code : 400), ($this->message ? $this->message : 'Ошибка'));
     }
 
     /**
@@ -201,7 +201,8 @@ class AuthController extends ApiControllerComponent
                         $this->message = 'Phone validation error';
                         $this->code = 400;
                     }
-                } else*/ if (($authField === 'email') or is_null($authField)) {
+                } else*/
+                if (($authField === 'email') or is_null($authField)) {
                     $login = $userModel->getLoginByEmail($email);
 
                     if (!$userModel->checkUserIsset($login)) {
@@ -219,38 +220,47 @@ class AuthController extends ApiControllerComponent
                                 $this->code = 200;
                             }
                         } else {*/
-                            //if (SMSHelper::checkCode($email, $code)) {
-                                if ($userModel->register((!empty($phone) ? $phone : $email), $password, $passwordRetype, $email, [
-                                    'first_name' => $firstName,
-                                    'last_name' => '',
-                                    'middle_name' => '',
-                                    'phone' => $phone,
-                                    'mobilephone' => $phone,
-                                ], intval($role) ? $role : UserRolesModel::ROLE_ID_USER)) {
-                                    $this->message = 'Success registeration';
-                                    $this->redirectUrl = App::init()->makeUrl('/{lk}/login');
-                                    $this->code = 200;
-                                } else {
-                                    $this->message = 'Some problems with registration';
-                                    $this->code = 400;
-                                }
-                            //}
+                        //if (SMSHelper::checkCode($email, $code)) {
+
+                        if (is_null($password) or empty($password)) {
+                            $this->message = 'Пустой пароль';
+                            $this->code = 400;
+                        } else if ($password !== $passwordRetype) {
+                            $this->message = 'Проверьте, что пароли совпадают';
+                            $this->code = 400;
+                        } else {
+                            if ($userModel->register((!empty($phone) ? $phone : $email), $password, $passwordRetype, $email, [
+                                'first_name' => $firstName,
+                                'last_name' => '',
+                                'middle_name' => '',
+                                'phone' => $phone,
+                                'mobilephone' => $phone,
+                            ], intval($role) ? $role : UserRolesModel::ROLE_ID_USER)) {
+                                $this->message = 'Регистрация прошла успешно';
+                                $this->redirectUrl = App::init()->makeUrl('/{lk}/login');
+                                $this->code = 200;
+                            } else {
+                                $this->message = 'Проблемы с регистрацией';
+                                $this->code = 400;
+                            }
+                        }
+                        //}
                         //}
                     } else {
-                        $this->message = 'Such login already registred';
+                        $this->message = 'Пользователь с таким логином уже зарегистрирован';
                         $this->code = 400;
                     }
                 }
             } else {
-                $this->message = 'Registration / authorization method not selected ';
+                $this->message = 'Метод регистрации / авторизации не выбран';
                 $this->code = 400;
             }
         } else {
-            $this->message = 'Allowed only POST-requests';
+            $this->message = 'Разрешены только POST-запросы';
             $this->code = 400;
         }
 
-        return $this->render(($this->userData ? $this->userData[0] : []), self::CODE_SUCCESS, ($this->code ? $this->code : 400), ($this->message ? $this->message : 'Error'));
+        return $this->render(($this->userData ? $this->userData[0] : []), ($this->code ? $this->code : 400), ($this->code === self::CODE_SUCCESS ? self::STATUS_SUCCESS : self::STATUS_ERROR), ($this->message ? $this->message : 'Ошибка'));
     }
 
     /**
@@ -300,7 +310,8 @@ class AuthController extends ApiControllerComponent
                     $this->code = 400;
                     $this->message = 'Login is empty';
                 }
-            } else */if ($authField === 'email') {
+            } else */
+            if ($authField === 'email') {
                 $login = $userModel->getLoginByEmail($email);
 
                 if (!empty($login)) {
@@ -313,23 +324,23 @@ class AuthController extends ApiControllerComponent
                             (new MailerController)->actionSendNewPassword($userId, $password);
                         }
 
-                        $this->message = 'Password succefully updated';
+                        $this->message = 'Пароль успешно обновлен';
                         $this->redirectUrl = App::init()->makeUrl('/{lk}/login');
                         $this->code = 200;
                     } else {
-                        $this->message = 'Some problems with password recovery';
+                        $this->message = 'Сбой при изменении пароля';
                         $this->code = 400;
                     }
                 } else {
                     $this->code = 400;
-                    $this->message = 'Login is empty';
+                    $this->message = 'Логин пуст';
                 }
             }
         } else {
-            $this->message = 'Allowed only POST-requests';
+            $this->message = 'Разрешены только POST-запросы';
             $this->code = 400;
         }
 
-        return $this->render(($this->userData ? $this->userData[0] : []), self::CODE_SUCCESS, ($this->code ? $this->code : 400), ($this->message ? $this->message : 'Error'));
+        return $this->render(($this->userData ? $this->userData[0] : []), self::CODE_SUCCESS, ($this->code ? $this->code : 400), ($this->message ? $this->message : 'Ошибка'));
     }
 }
